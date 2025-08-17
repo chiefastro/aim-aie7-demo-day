@@ -1,0 +1,21 @@
+{
+  "osf_version": "0.1",
+  "publisher": {
+    "merchant_id": "toast_street_exeter_8_clifford_street",
+    "name": "Street Exeter 8 Clifford Street",
+    "domain": "localhost:3000"
+  },
+  "updated_at": "2025-08-15T19:05:51.834Z",
+  "offers": [
+    {
+      "href": "http://localhost:3000/osf/toast_street_exeter_8_clifford_street/.well-known/offers/ofr_001.json",
+      "offer_id": "ofr_001",
+      "updated_at": "2025-08-15T19:05:51.834Z"
+    },
+    {
+      "href": "http://localhost:3000/osf/toast_street_exeter_8_clifford_street/.well-known/offers/ofr_002.json",
+      "offer_id": "ofr_002",
+      "updated_at": "2025-08-15T19:05:51.834Z"
+    }
+  ]
+}

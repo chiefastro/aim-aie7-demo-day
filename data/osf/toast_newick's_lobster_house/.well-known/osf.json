@@ -1,0 +1,21 @@
+{
+  "osf_version": "0.1",
+  "publisher": {
+    "merchant_id": "toast_newick's_lobster_house",
+    "name": "Newick's Lobster House",
+    "domain": "localhost:3000"
+  },
+  "updated_at": "2025-08-15T19:05:51.830Z",
+  "offers": [
+    {
+      "href": "http://localhost:3000/osf/toast_newick's_lobster_house/.well-known/offers/ofr_001.json",
+      "offer_id": "ofr_001",
+      "updated_at": "2025-08-15T19:05:51.831Z"
+    },
+    {
+      "href": "http://localhost:3000/osf/toast_newick's_lobster_house/.well-known/offers/ofr_002.json",
+      "offer_id": "ofr_002",
+      "updated_at": "2025-08-15T19:05:51.831Z"
+    }
+  ]
+}
