@@ -1,0 +1,99 @@
+{
+  "offer_id": "ofr_002",
+  "offer_version": "1.0",
+  "created_at": "2025-01-15T00:00:00Z",
+  "updated_at": "2025-01-15T00:00:00Z",
+  "expires_at": "2025-02-15T00:00:00Z",
+  
+  "title": "OTTO Portland Dinner Offer",
+  "description": "Dinner offer at OTTO Portland. Get $2.50 back when you spend $25 or more on dinner entrees.",
+  
+  "content": {
+    "restaurant_description": "OTTO Portland is an Italian pizza restaurant serving Buffalo Chicken Pizza ($18.50), Chicken & Basil Pizza ($16.25), Chicken Caramelized Pear Pizza ($18.50), Fresh Pineapple Bacon Pizza ($18.50), Hot Honey Pepperoni Pizza ($18.50), Mashed Potato Bacon Pizza ($18.50), Meatball Ricotta Pizza ($18.50), Meatball Sausage Pepperoni Pizza ($19.00), Pepperoni Pizza ($15.00), Spicy Pulled Pork Pizza ($18.25), Salami Capicola Pizza ($19.00), Sausage Vidalia Pizza ($16.75), Spicy Pulled Pork Scallion Pizza ($16.75) and more. Open 11:00 am - 10:00 pm. Located in 431 Central Avenue, Dover, NH 03820.",
+    "featured_items": [
+      "Buffalo Chicken Pizza - $18.50",
+      "Chicken & Basil Pizza - $16.25",
+      "Chicken Caramelized Pear Pizza - $18.50",
+      "Fresh Pineapple Bacon Pizza - $18.50",
+      "Hot Honey Pepperoni Pizza - $18.50"
+    ],
+    "cuisine_type": "Italian pizza",
+    "price_range": "$$",
+    "dietary_options": ["vegetarian", "gluten-free"]
+  },
+  
+  "terms": {
+    "min_spend": 25.0,
+    "max_discount": 2.50,
+    "valid_days": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+    "valid_hours": {
+      "start": "11:00",
+      "end": "22:00"
+    },
+    "restrictions": [
+      "Valid for dine-in and takeout orders",
+      "Cannot be combined with other offers",
+      "Valid only at this location"
+    ]
+  },
+  
+  "bounty": {
+    "amount": 2.50,
+    "currency": "USD",
+    "revenue_split": {
+      "consumer": 50,
+      "merchant": 40,
+      "platform": 10
+    }
+  },
+  
+  "merchant": {
+    "id": "toast_otto_portland",
+    "name": "OTTO Portland",
+    "location": {
+      "lat": 43.1979,
+      "lng": -70.8737,
+      "address": "431 Central Avenue, Dover, NH 03820",
+      "city": "Dover",
+      "state": "NH",
+      "zip": "03820"
+    },
+    "phone": "Call",
+    "hours": ["11:00 am - 10:00 pm"]
+  },
+  
+  "attribution": {
+    "method": "receipt_upload",
+    "instructions": "Upload your receipt after dining to receive your bounty",
+    "required_fields": ["total_amount", "date", "items"]
+  },
+  
+  "provenance": {
+    "source": "merchant_direct",
+    "verified": true,
+    "last_verified": "2025-01-15T00:00:00Z"
+  },
+  
+  "labels": [
+    "pizza", "italian", "dinner", "evening", "dine-in", "takeout", "dover-nh", "new-hampshire", "seacoast"
+  ],
+  
+  "search_metadata": {
+    "cuisine": "Italian pizza",
+    "price_range": "$$",
+    "location": {
+      "city": "Dover",
+      "state": "NH",
+      "coordinates": [-70.8737, 43.1979]
+    },
+    "meal_type": "dinner",
+    "dietary_restrictions": ["vegetarian", "gluten-free"],
+    "popular_items": [
+      "Buffalo Chicken Pizza - $18.50",
+      "Chicken & Basil Pizza - $16.25",
+      "Chicken Caramelized Pear Pizza - $18.50",
+      "Fresh Pineapple Bacon Pizza - $18.50",
+      "Hot Honey Pepperoni Pizza - $18.50"
+    ]
+  }
+}

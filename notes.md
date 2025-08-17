@@ -1,0 +1,1 @@
+Toast has Cloudflare blocking scraping.

@@ -1,0 +1,7 @@
+# Restaurant URLs - one per line
+# Lines starting with # are comments
+# Empty lines are ignored
+
+https://www.toasttab.com/local/order/otto-portland-dover-nh
+https://www.toasttab.com/local/order/street-exeter-8-clifford-street-cmaxy
+https://www.toasttab.com/local/order/newicks-lobster-house-dover-431-dover-point-rd

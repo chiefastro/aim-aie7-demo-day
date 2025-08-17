@@ -1,0 +1,99 @@
+{
+  "offer_id": "ofr_001",
+  "offer_version": "1.0",
+  "created_at": "2025-01-15T00:00:00Z",
+  "updated_at": "2025-01-15T00:00:00Z",
+  "expires_at": "2025-02-15T00:00:00Z",
+  
+  "title": "Newick's Lobster House Lunch Offer",
+  "description": "Lunch special at Newick's Lobster House. Get $2.50 back when you spend $15 or more on lunch items.",
+  
+  "content": {
+    "restaurant_description": "Newick's Lobster House is a seafood restaurant serving Lunch Bay Scallops ($16.00), Lunch Calamari ($14.00), Lunch Chicken Tenders ($13.00), Lunch Strips ($17.00), Lunch Coconut Shrimp ($16.00), Lunch Fantail Shrimp ($16.00), Lunch Gulf Shrimp ($15.00), Lunch Filet of Haddock ($20.00), Lunch Haddock Nuggets ($15.00), Lunch Sea Scallops ($33.00), Lunch Whole Clams ($32.00), Fish & Chips ($16.00), Bay Scallop Roll ($15.00), Cheeseburger ($16.00), Cap'n Burger ($17.00), Chicken Salad Sandwich ($12.00), Chicken Sandwich Broiled ($14.00), Chicken Sandwich Fried ($14.00), Clam Roll ($37.00), Fish Tacos ($16.00), Grilled Cheese ($8.00), Haddock Sandwich Broiled ($17.00), Haddock Sandwich Fried ($17.00), Hamburger ($15.00), Lobster Roll Petite ($34.00), Lobster Roll Original ($40.00), Lobster Roll Jumbo ($44.00), Shrimp Roll ($15.00), Tuna Melt on Panini ($12.00), Veggie Burger ($14.00) and more. Open 11:00 am - 7:30 pm. Located in 431 Dover Point Rd, Dover, NH 03820.",
+    "featured_items": [
+      "Lunch Bay Scallops - $16.00",
+      "Lunch Calamari - $14.00",
+      "Lunch Chicken Tenders - $13.00",
+      "Lunch Strips - $17.00",
+      "Lunch Coconut Shrimp - $16.00"
+    ],
+    "cuisine_type": "seafood",
+    "price_range": "$$$",
+    "dietary_options": ["seafood", "gluten-free"]
+  },
+  
+  "terms": {
+    "min_spend": 15.0,
+    "max_discount": 2.50,
+    "valid_days": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+    "valid_hours": {
+      "start": "11:00",
+      "end": "19:30"
+    },
+    "restrictions": [
+      "Valid for dine-in and takeout orders",
+      "Cannot be combined with other offers",
+      "Valid only at this location"
+    ]
+  },
+  
+  "bounty": {
+    "amount": 2.50,
+    "currency": "USD",
+    "revenue_split": {
+      "consumer": 50,
+      "merchant": 40,
+      "platform": 10
+    }
+  },
+  
+  "merchant": {
+    "id": "toast_newicks_lobster_house",
+    "name": "Newick's Lobster House",
+    "location": {
+      "lat": 43.1587,
+      "lng": -70.8234,
+      "address": "431 Dover Point Rd, Dover, NH 03820",
+      "city": "Dover",
+      "state": "NH",
+      "zip": "03820"
+    },
+    "phone": "Call",
+    "hours": ["11:00 am - 7:30 pm"]
+  },
+  
+  "attribution": {
+    "method": "receipt_upload",
+    "instructions": "Upload your receipt after dining to receive your bounty",
+    "required_fields": ["total_amount", "date", "items"]
+  },
+  
+  "provenance": {
+    "source": "merchant_direct",
+    "verified": true,
+    "last_verified": "2025-01-15T00:00:00Z"
+  },
+  
+  "labels": [
+    "seafood", "lobster", "fish", "lunch", "midday", "dine-in", "takeout", "dover-nh", "new-hampshire", "seacoast"
+  ],
+  
+  "search_metadata": {
+    "cuisine": "seafood",
+    "price_range": "$$$",
+    "location": {
+      "city": "Dover",
+      "state": "NH",
+      "coordinates": [-70.8234, 43.1587]
+    },
+    "meal_type": "lunch",
+    "dietary_restrictions": ["seafood", "gluten-free"],
+    "popular_items": [
+      "Lunch Bay Scallops - $16.00",
+      "Lunch Calamari - $14.00",
+      "Lunch Chicken Tenders - $13.00",
+      "Lunch Strips - $17.00",
+      "Lunch Coconut Shrimp - $16.00"
+    ]
+  }
+}

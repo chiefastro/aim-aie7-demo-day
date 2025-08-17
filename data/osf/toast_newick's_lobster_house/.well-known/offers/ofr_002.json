@@ -1,0 +1,99 @@
+{
+  "offer_id": "ofr_002",
+  "offer_version": "1.0",
+  "created_at": "2025-01-15T00:00:00Z",
+  "updated_at": "2025-01-15T00:00:00Z",
+  "expires_at": "2025-02-15T00:00:00Z",
+  
+  "title": "Newick's Lobster House Dinner Offer",
+  "description": "Dinner offer at Newick's Lobster House. Get $2.50 back when you spend $25 or more on dinner entrees.",
+  
+  "content": {
+    "restaurant_description": "Newick's Lobster House is a seafood restaurant serving Dinner Bay Scallops ($23.00), Dinner Calamari ($23.00), Dinner Chicken Tenders ($18.00), Dinner Strips ($25.00), Dinner Coconut Shrimp ($22.00), Dinner Fantail Shrimp ($21.00), Dinner Gulf Shrimp ($21.00), Dinner Filet of Haddock ($25.00), Dinner Haddock Nuggets ($21.00), Dinner Sea Scallops ($52.00), Dinner Whole Clams ($52.00), Baked Scallops ($52.00), Baked Stuffed Haddock ($28.00), Broiled Haddock ($26.00), Fettuccine Alfredo ($13.00), Haddock Au Gratin ($19.00), Lobster Au Gratin ($43.00), Lobster Flat Bread ($33.00), Lobster Pie ($44.00), Lobster Stuffed Haddock ($43.00), Shrimp Flat Bread ($11.00), Shrimp Stuffed Haddock ($29.00), Steak Tips Street Maple Bourbon ($28.00), 1 1/2 Triple Lobster ($118.00), Snow Crab Legs ($51.99), Seafood Casserole Small ($23.99), Seafood Casserole Large ($33.99), Fried Lobster tails ($32.99) and more. Open 11:00 am - 7:30 pm. Located in 431 Dover Point Rd, Dover, NH 03820.",
+    "featured_items": [
+      "Dinner Bay Scallops - $23.00",
+      "Dinner Calamari - $23.00",
+      "Dinner Strips - $25.00",
+      "Dinner Filet of Haddock - $25.00",
+      "Baked Stuffed Haddock - $28.00"
+    ],
+    "cuisine_type": "seafood",
+    "price_range": "$$$",
+    "dietary_options": ["seafood", "gluten-free"]
+  },
+  
+  "terms": {
+    "min_spend": 25.0,
+    "max_discount": 2.50,
+    "valid_days": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+    "valid_hours": {
+      "start": "11:00",
+      "end": "19:30"
+    },
+    "restrictions": [
+      "Valid for dine-in and takeout orders",
+      "Cannot be combined with other offers",
+      "Valid only at this location"
+    ]
+  },
+  
+  "bounty": {
+    "amount": 2.50,
+    "currency": "USD",
+    "revenue_split": {
+      "consumer": 50,
+      "merchant": 40,
+      "platform": 10
+    }
+  },
+  
+  "merchant": {
+    "id": "toast_newicks_lobster_house",
+    "name": "Newick's Lobster House",
+    "location": {
+      "lat": 43.1587,
+      "lng": -70.8234,
+      "address": "431 Dover Point Rd, Dover, NH 03820",
+      "city": "Dover",
+      "state": "NH",
+      "zip": "03820"
+    },
+    "phone": "Call",
+    "hours": ["11:00 am - 7:30 pm"]
+  },
+  
+  "attribution": {
+    "method": "receipt_upload",
+    "instructions": "Upload your receipt after dining to receive your bounty",
+    "required_fields": ["total_amount", "date", "items"]
+  },
+  
+  "provenance": {
+    "source": "merchant_direct",
+    "verified": true,
+    "last_verified": "2025-01-15T00:00:00Z"
+  },
+  
+  "labels": [
+    "seafood", "lobster", "fish", "dinner", "evening", "dine-in", "takeout", "dover-nh", "new-hampshire", "seacoast"
+  ],
+  
+  "search_metadata": {
+    "cuisine": "seafood",
+    "price_range": "$$$",
+    "location": {
+      "city": "Dover",
+      "state": "NH",
+      "coordinates": [-70.8234, 43.1587]
+    },
+    "meal_type": "dinner",
+    "dietary_restrictions": ["seafood", "gluten-free"],
+    "popular_items": [
+      "Dinner Bay Scallops - $23.00",
+      "Dinner Calamari - $23.00",
+      "Dinner Strips - $25.00",
+      "Dinner Filet of Haddock - $25.00",
+      "Baked Stuffed Haddock - $28.00"
+    ]
+  }
+}
