@@ -60,6 +60,16 @@ Success = live demo where a consumer agent discovers offers, “orders” from a
 - Consumer Agent:
   - Uses MCP to discover offers and drive the flow end-to-end
 
+##### 3.1) Tech Stack
+Python for backend
+FastAPI for backend server
+LangGraph for agent orchestration
+Qdrant for vector DB
+Typescript and React for frontend with Tailwind CSS and shadcn
+uv and pyproject.toml for Python dependency management
+Docker compose and Makefile for local boot
+Vercel for deployment
+
 ---
 
 #### 4) Data Model (v0)
@@ -226,7 +236,7 @@ Day 1
 - Finalize ACP OSF and Offer Document v0
 - Build scraper for 3 Toast merchants and generate static OSFs + Offer Documents
 
-Day 2
+Day 2 ✅
 - Implement GOR ingester + validator
 - Set up Qdrant collection with custom scoring function (geo + time decay)
 - Implement vector embeddings for offer text (merchant name + labels + description)

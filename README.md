@@ -135,11 +135,11 @@ npm run add-url https://www.toasttab.com/local/order/restaurant-url
 
 ## Next Steps (Days 2-7)
 
-### Day 2: Global Offer Registry (GOR)
-- [ ] Set up Qdrant vector database
-- [ ] Implement offer ingestion and indexing
-- [ ] Create hybrid search with geo/time scoring
-- [ ] Build GOR HTTP API
+### Day 2: Global Offer Registry (GOR) ✅
+- [x] Set up Qdrant vector database
+- [x] Implement offer ingestion and indexing
+- [x] Create hybrid search with geo/time scoring
+- [x] Build GOR HTTP API
 
 ### Day 3: MCP Server
 - [ ] Create MCP server wrapping GOR
