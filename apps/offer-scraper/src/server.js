@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Serve static files from the OSF directory
-const osfDir = path.join(__dirname, '../../../data/osf');
+const osfDir = path.join(__dirname, '../data/osf');
 app.use('/osf', express.static(osfDir));
 
 // Add CORS headers for demo purposes
