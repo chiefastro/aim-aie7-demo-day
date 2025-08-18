@@ -1,4 +1,4 @@
-.PHONY: help install dev install-dev run test clean lint format
+.PHONY: help install dev install-dev run test clean lint format build publish
 
 help: ## Show this help message
 	@echo "MCP Offers Server - Available commands:"
@@ -13,7 +13,7 @@ install-dev: ## Install development dependencies
 dev: install-dev ## Install dev dependencies and run in development mode
 	uv run python -m mcp_offers
 
-run: ## Run the MCP server
+run: ## Run the MCP server (run directly, not in Docker)
 	uv run python -m mcp_offers
 
 test: ## Run tests

@@ -66,9 +66,11 @@ Find offers near a specific location.
 
 ## Quick Start
 
+> **Note**: This MCP server runs directly on your host machine (not in Docker). Make sure you have the GOR API running in Docker first.
+
 ### Prerequisites
 - Python 3.9+
-- GOR API running on `http://localhost:3001`
+- GOR API running on `http://localhost:3001` (start with `make up` from project root)
 - `uv` package manager
 
 ### Installation

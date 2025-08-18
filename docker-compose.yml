@@ -69,50 +69,9 @@ services:
       retries: 3
       start_period: 10s
 
-  # MCP Offers Server
-  mcp-offers:
-    build:
-      context: ./apps/mcp-offers
-      dockerfile: Dockerfile
-    container_name: acp-mcp-offers
-    ports:
-      - "3002:3002"
-    environment:
-      - GOR_BASE_URL=http://gor-api:3001
-      - MCP_HOST=0.0.0.0
-      - MCP_PORT=3002
-      - LOG_LEVEL=INFO
-    depends_on:
-      gor-api:
-        condition: service_healthy
-    networks:
-      - acp-network
-    healthcheck:
-      test: ["CMD", "python", "-c", "import asyncio; from mcp_offers.gor_client import GORClient; asyncio.run(GORClient('http://gor-api:3001').health_check())"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 
-  # Consumer Agent CLI (interactive)
-  consumer-agent-cli:
-    build:
-      context: ./apps/consumer-agent-cli
-      dockerfile: Dockerfile
-    environment:
-      - MCP_HOST=mcp-offers
-      - MCP_PORT=3002
-      - GOR_BASE_URL=http://gor-api:3001
-      - LOG_LEVEL=INFO
-    depends_on:
-      mcp-offers:
-        condition: service_healthy
-    networks:
-      - acp-network
-    stdin_open: true
-    tty: true
-    profiles:
-      - cli
+
+
 
   # Transaction Simulator (placeholder for Day 5)
   tx-simulator:

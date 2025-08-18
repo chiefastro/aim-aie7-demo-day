@@ -156,14 +156,7 @@ uv sync
 uv run python -m mcp_offers
 ```
 
-#### 4. Run Consumer Agent CLI
 
-```bash
-# In a new terminal
-cd apps/consumer-agent-cli
-uv sync
-uv run python -m consumer_agent
-```
 
 ### Configuration
 
@@ -203,10 +196,7 @@ npm run add-url https://www.toasttab.com/local/order/restaurant-url
 ### Day 3: MCP Server ✅
 - [x] **MCP Offers Server**: Wraps GOR API with standardized MCP tools
 - [x] **Semantic Search Tools**: `offers.search`, `offers.getById`, `offers.nearby`
-- [x] **Consumer Agent CLI**: Interactive interface demonstrating MCP tool usage
 - [x] **GOR Integration**: Direct connection to Global Offer Registry
-- [x] **Mock Data Support**: Demo data for testing and development
-
 
 
 ### Day 4: Restaurant Agents

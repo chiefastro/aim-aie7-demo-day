@@ -16,7 +16,6 @@ class DockerSetupTester:
         self.services = {
             "qdrant": {"url": "http://localhost:6333/health", "port": 6333},
             "gor-api": {"url": "http://localhost:3001/health", "port": 3001},
-            "mcp-offers": {"url": "http://localhost:3002/health", "port": 3002},
             "offer-scraper": {"url": "http://localhost:3000/demo", "port": 3000}
         }
         self.results = {}

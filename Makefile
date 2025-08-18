@@ -1,4 +1,4 @@
-.PHONY: help build up down logs clean test demo setup cli
+.PHONY: help build up down logs clean test demo setup
 
 help: ## Show this help message
 	@echo "ACP Demo - Available commands:"
@@ -8,8 +8,8 @@ help: ## Show this help message
 build: ## Build all Docker images
 	docker-compose build
 
-up: ## Start the core ACP demo stack (GOR + MCP + Qdrant)
-	docker-compose up -d qdrant gor-api mcp-offers
+up: ## Start the core ACP demo stack (GOR + Qdrant)
+	docker-compose up -d qdrant gor-api
 
 down: ## Stop all services
 	docker-compose down
@@ -26,14 +26,11 @@ setup: ## Start setup services (offer scraper + data generation)
 	docker-compose --profile setup up -d
 
 demo: ## Start complete demo stack
-	docker-compose --profile setup --profile cli up -d
-
-cli: ## Start interactive consumer agent CLI
-	docker-compose --profile cli run --rm consumer-agent-cli
+	docker-compose --profile setup up -d
 
 # Development
 dev: ## Start development stack with volume mounts
-	docker-compose --profile setup --profile cli up -d
+	docker-compose --profile setup up -d
 
 # Testing
 test: ## Run tests for all components
@@ -46,17 +43,6 @@ test: ## Run tests for all components
 		uv run python test_mcp_server.py; \
 	else \
 		echo "❌ No Python interpreter found in mcp-offers"; \
-		exit 1; \
-	fi
-	@echo "🧪 Testing Consumer Agent CLI..."
-	@cd apps/consumer-agent-cli && if command -v python3 >/dev/null 2>&1; then \
-		python3 test_cli.py; \
-	elif command -v python >/dev/null 2>&1; then \
-		python test_cli.py; \
-	elif command -v uv >/dev/null 2>&1; then \
-		uv run python test_cli.py; \
-	else \
-		echo "❌ No Python interpreter found in consumer-agent-cli"; \
 		exit 1; \
 	fi
 
@@ -115,7 +101,7 @@ health: ## Check health of all services
 	@echo "🏥 Checking service health..."
 	@echo "Qdrant: $(shell curl -s http://localhost:6333/health | jq -r '.status' 2>/dev/null || echo 'unavailable')"
 	@echo "GOR API: $(shell curl -s http://localhost:3001/health | jq -r '.status' 2>/dev/null || echo 'unavailable')"
-	@echo "MCP Server: $(shell curl -s http://localhost:3002/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
+	@echo "MCP Server: $(shell curl -s http://localhost:3002/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable (run manually: cd apps/mcp-offers && make run)')"
 
 # Quick start
 start: ## Quick start - build and run core stack
@@ -124,7 +110,7 @@ start: ## Quick start - build and run core stack
 	make up
 	@echo "✅ Core stack started!"
 	@echo "📊 GOR API: http://localhost:3001"
-	@echo "🔧 MCP Server: http://localhost:3002"
+	@echo "🔧 MCP Server: http://localhost:3002 (run manually: cd apps/mcp-offers && make run)"
 	@echo "🗄️  Qdrant: http://localhost:6333"
 
 # Demo workflow
@@ -134,15 +120,15 @@ workflow: ## Run complete demo workflow
 	make start
 	@echo "2. Waiting for services to be ready..."
 	sleep 30
-	@echo "3. Starting consumer agent CLI..."
-	make cli
+	@echo "3. MCP server ready for manual start: cd apps/mcp-offers && make run"
 
 # Individual service management
 gor: ## Start only GOR API and Qdrant
 	docker-compose up -d qdrant gor-api
 
 mcp: ## Start MCP server (requires GOR to be running)
-	docker-compose up -d mcp-offers
+	@echo "🔧 Starting MCP server manually..."
+	@cd apps/mcp-offers && make run
 
 # Data management
 ingest: ## Trigger offer ingestion in GOR
