@@ -26,6 +26,9 @@ RUN useradd --create-home --shell /bin/bash app \
     && chown -R app:app /app
 USER app
 
+# Set Python path
+ENV PYTHONPATH=/app/src
+
 # Expose port
 EXPOSE 3001
 
@@ -34,4 +37,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:3001/health || exit 1
 
 # Default command
-CMD ["uv", "run", "python", "src/gor/main.py"]
+CMD ["uv", "run", "python", "-m", "gor.main"]

@@ -242,9 +242,9 @@ Day 2 ✅
 - Implement vector embeddings for offer text (merchant name + labels + description)
 - Expose GOR HTTP search API with hybrid ranking
 
-Day 3
+Day 3 ✅
 - Implement MCP server wrapping GOR
-- Create demo Consumer Agent (CLI skeleton) calling MCP
+- MCP server provides semantic search tools for consumer agents
 
 Day 4
 - Implement Restaurant Agent template and spin up 3 instances (configs per merchant)
@@ -252,7 +252,7 @@ Day 4
 
 Day 5
 - Implement Transaction Simulator: receipts, postbacks, ledger, wallet endpoint
-- Wire Restaurant Agents → Transaction Simulator, and Consumer Agent → Restaurant Agents
+- Wire Restaurant Agents → Transaction Simulator
 
 Day 6
 - End-to-end happy path: discover → present → initiate → confirm → receipt → wallet credit
@@ -268,7 +268,7 @@ Day 7
 
 1) Show ACP OSF on a merchant domain (static server) at `/.well-known/osf.json`
 2) Show GOR search for "pizza near Boston"
-3) In Consumer Agent CLI: run search via MCP and select an offer
+3) Use MCP server to search for offers via semantic query
 4) Call Restaurant Agent present_offer then initiate_checkout (receipt is shown)
 5) Confirm order; Settlement Postback arrives; wallet balance updates
 6) Show receipt and ledger entries; highlight rev-share amounts
@@ -301,7 +301,7 @@ apps/
   mcp-offers/             # MCP server exposing GOR
   tx-simulator/           # receipts, postbacks, wallet
   agent-restaurant-*/     # per-merchant agents (3 copies or one app with configs)
-  consumer-agent-cli/     # demo driver
+
 data/
   scraped/                # raw snapshots
   osf/                    # generated osf.json + offers

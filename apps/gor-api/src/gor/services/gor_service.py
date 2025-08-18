@@ -109,15 +109,20 @@ class GORService:
             search_text = self.generate_search_text(offer)
             embedding = await self.embedding_service.get_embedding(search_text)
             
-            # Convert string offer ID to integer hash for Qdrant
+            # Create unique point ID by combining offer_id and merchant info
             offer_id = offer.get("offer_id", "")
-            point_id = hash(offer_id) & 0x7fffffff  # Convert to positive 32-bit integer
+            merchant_id = offer.get("merchant", {}).get("id", "unknown")
+            merchant_name = offer.get("merchant", {}).get("name", "Unknown")
+            
+            # Create a unique identifier that combines offer_id and merchant info
+            unique_id = f"{merchant_id}_{offer_id}"
+            point_id = hash(unique_id) & 0x7fffffff  # Convert to positive 32-bit integer
             
             # Prepare payload for Qdrant
             payload = {
                 "offer_id": offer_id,
-                "merchant_id": offer.get("merchant", {}).get("id", "unknown"),
-                "merchant_name": offer.get("merchant", {}).get("name", "Unknown Restaurant"),
+                "merchant_id": merchant_id,
+                "merchant_name": merchant_name,
                 "title": offer.get("title", ""),
                 "description": offer.get("description", ""),
                 "content": offer.get("content", {}),
@@ -128,7 +133,8 @@ class GORService:
                 "search_text": search_text,
                 "created_at": offer.get("created_at", ""),
                 "updated_at": offer.get("updated_at", ""),
-                "expires_at": offer.get("expires_at")
+                "expires_at": offer.get("expires_at"),
+                "unique_id": unique_id  # Store the unique identifier for debugging
             }
             
             # Upsert to Qdrant
@@ -151,12 +157,23 @@ class GORService:
     def generate_search_text(self, offer: Dict[str, Any]) -> str:
         """Generate searchable text from offer data"""
         parts = [
-            offer.get("title", ""),
-            offer.get("description", ""),
-            offer.get("merchant", {}).get("name", ""),
+            # Primary content - cuisine and food
             offer.get("content", {}).get("cuisine_type", ""),
             offer.get("content", {}).get("restaurant_description", ""),
-            " ".join(offer.get("labels", [])),
+            " ".join(offer.get("content", {}).get("featured_items", [])),
+            
+            # Restaurant name and type
+            offer.get("merchant", {}).get("name", ""),
+            
+            # Labels (cuisine-specific)
+            " ".join([label for label in offer.get("labels", []) 
+                     if label not in ["lunch", "dinner", "midday", "evening", "dine-in", "takeout", "dover-nh", "new-hampshire", "seacoast"]]),
+            
+            # Title and description (less weight)
+            offer.get("title", ""),
+            offer.get("description", ""),
+            
+            # Location (minimal weight)
             offer.get("merchant", {}).get("location", {}).get("city", ""),
             offer.get("merchant", {}).get("location", {}).get("state", "")
         ]
@@ -217,7 +234,7 @@ class GORService:
             return {"error": str(e)}
     
     async def search_offers(self, query: str, filters: Dict[str, Any] = None) -> List[Dict[str, Any]]:
-        """Search offers with filters"""
+        """Search offers with vector similarity and filters"""
         try:
             filter_conditions = []
             
@@ -239,14 +256,41 @@ class GORService:
             
             scroll_filter = Filter(must=filter_conditions) if filter_conditions else None
             
-            result = self.qdrant.scroll(
-                collection_name=self.collection_name,
-                scroll_filter=scroll_filter,
-                limit=filters.get("limit", 20) if filters else 20,
-                offset=filters.get("offset", 0) if filters else 0
-            )
-            
-            return [point.payload for point in result[0]]
+            if query and query.strip():
+                # Use vector similarity search for semantic queries
+                search_text = query.strip().lower()
+                query_embedding = await self.embedding_service.get_embedding(search_text)
+                
+                # Search with vector similarity
+                result = self.qdrant.search(
+                    collection_name=self.collection_name,
+                    query_vector=query_embedding,
+                    query_filter=scroll_filter,
+                    limit=filters.get("limit", 20) if filters else 20,
+                    offset=filters.get("offset", 0) if filters else 0,
+                    with_payload=True,
+                    score_threshold=0.75  # High threshold for semantic similarity
+                )
+                
+                # Log similarity scores for debugging
+                if result:
+                    logger.info(f"Vector search results for '{query}':")
+                    for i, point in enumerate(result[:3]):  # Log top 3 results
+                        logger.info(f"  {i+1}. Score: {point.score:.3f}, Offer: {point.payload.get('offer_id', 'unknown')}")
+                
+                # Return offers sorted by similarity score
+                return [point.payload for point in result]
+            else:
+                # No query - just return filtered results without ranking
+                result = self.qdrant.scroll(
+                    collection_name=self.collection_name,
+                    scroll_filter=scroll_filter,
+                    limit=filters.get("limit", 20) if filters else 20,
+                    offset=filters.get("offset", 0) if filters else 0
+                )
+                
+                return [point.payload for point in result[0]]
+                
         except Exception as e:
             logger.error(f"Search error: {e}")
             return []

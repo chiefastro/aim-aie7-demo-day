@@ -88,6 +88,38 @@ data/osf/toast_otto_portland/
 
 ## Quick Start
 
+### 🐳 Docker (Recommended)
+
+The easiest way to run the complete ACP demo stack:
+
+```bash
+# Quick start - builds and runs everything
+make start
+
+# Or step by step:
+make build          # Build all Docker images
+make up             # Start core services (GOR + MCP + Qdrant)
+make cli            # Run interactive consumer agent CLI
+
+# View all available commands:
+make help
+```
+
+**Available Docker Commands:**
+- `make start` - Quick start (build + run core stack)
+- `make demo` - Complete demo with all services
+- `make workflow` - Full demo workflow
+- `make status` - Check service status
+- `make health` - Check service health
+- `make logs` - View service logs
+- `make clean` - Clean up everything
+
+### 🔧 Manual Setup
+
+If you prefer to run services manually:
+
+#### 1. Scrape Restaurant Data
+
 ```bash
 # Install dependencies
 cd apps/offer-scraper
@@ -105,6 +137,26 @@ npm run generate
 # Start demo server
 npm run server
 ```
+
+#### 2. Start Global Offer Registry
+
+```bash
+# In a new terminal
+cd apps/gor-api
+uv sync
+uv run python -m gor.main
+```
+
+#### 3. Start MCP Offers Server
+
+```bash
+# In a new terminal
+cd apps/mcp-offers
+uv sync
+uv run python -m mcp_offers
+```
+
+
 
 ### Configuration
 
@@ -141,10 +193,11 @@ npm run add-url https://www.toasttab.com/local/order/restaurant-url
 - [x] Create hybrid search with geo/time scoring
 - [x] Build GOR HTTP API
 
-### Day 3: MCP Server
-- [ ] Create MCP server wrapping GOR
-- [ ] Implement `offers.search`, `offers.getById`, `offers.nearby` tools
-- [ ] Build demo consumer agent CLI
+### Day 3: MCP Server ✅
+- [x] **MCP Offers Server**: Wraps GOR API with standardized MCP tools
+- [x] **Semantic Search Tools**: `offers.search`, `offers.getById`, `offers.nearby`
+- [x] **GOR Integration**: Direct connection to Global Offer Registry
+
 
 ### Day 4: Restaurant Agents
 - [ ] Implement A2A endpoints for restaurant agents
@@ -173,6 +226,65 @@ Consumer Agent (MCP) → GOR (Search) → Restaurant Agents (A2A) → Transactio
        ↓                      ↓                    ↓                    ↓
    MCP Tools           Vector Search         Order Flow          Wallet/Ledger
 ```
+
+### 🐳 Docker Architecture
+
+The ACP demo uses Docker containers for easy deployment and consistency:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              ACP Demo Stack                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  Port 3000    Port 3001    Port 3002    Port 6333                        │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐                      │
+│  │Offer    │  │GOR API  │  │MCP      │  │Qdrant   │                      │
+│  │Scraper  │  │(Search) │  │Server   │  │(Vector  │                      │
+│  │(ACP     │  │         │  │(Semantic│  │DB)      │                      │
+│  │Docs)    │  │         │  │Layer)   │  │         │                      │
+│  └─────────┘  └─────────┘  └─────────┘  └─────────┘                      │
+│       │             │             │             │                        │
+│       └─────────────┼─────────────┼─────────────┘                        │
+│                      ▼             ▼                                      │
+│              ┌─────────────────────────────────┐                          │
+│              │        Consumer Agent           │                          │
+│              │         (Interactive            │                          │
+│              │          CLI/Web)               │                          │
+│              └─────────────────────────────────┘                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Service Ports:**
+- **3000**: Offer Scraper (ACP documents)
+- **3001**: GOR API (search endpoints)
+- **3002**: MCP Server (semantic tools)
+- **6333**: Qdrant (vector database)
+- **4001-4003**: Restaurant Agents (future - Day 4)
+- **3003**: Transaction Simulator (future - Day 5)
+
+### MCP Server Architecture
+
+The **MCP Offers Server** provides the semantic layer that connects consumer agents to the Global Offer Registry:
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│ Consumer Agent  │───▶│  MCP Server      │───▶│  GOR API       │
+│ (CLI/Web)      │    │  (Port 3002)     │    │  (Port 3001)   │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+                              │
+                              ▼
+                       ┌──────────────────┐
+                       │  MCP Tools      │
+                       │  • offers.search│
+                       │  • offers.getById│
+                       │  • offers.nearby │
+                       └──────────────────┘
+```
+
+**Key Components:**
+- **MCP Server**: Standardized interface for AI agents
+- **GOR Client**: HTTP client for Global Offer Registry
+- **Tool Handlers**: Process MCP tool calls and format responses
+- **Data Models**: Pydantic models for type safety
 
 ## ACP Protocol Components
 
