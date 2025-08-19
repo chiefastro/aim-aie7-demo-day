@@ -199,10 +199,12 @@ npm run add-url https://www.toasttab.com/local/order/restaurant-url
 - [x] **GOR Integration**: Direct connection to Global Offer Registry
 
 
-### Day 4: Restaurant Agents
-- [ ] Implement A2A endpoints for restaurant agents
-- [ ] Create order state machine (CREATED → CONFIRMED → SETTLED)
-- [ ] Build 3 restaurant agent instances
+### Day 4: Restaurant Agents ✅
+- [x] Create mock restaurant web servers
+- [x] Create restaurant agent template with LangGraph
+- [x] Implement A2A endpoints for restaurant agents
+- [x] Create order state machine (CREATED → CONFIRMED → SETTLED)
+- [x] Build 3 restaurant agent instances
 
 ### Day 5: Transaction Simulator
 - [ ] Implement Attribution Receipt generation
@@ -258,8 +260,40 @@ The ACP demo uses Docker containers for easy deployment and consistency:
 - **3001**: GOR API (search endpoints)
 - **3002**: MCP Server (semantic tools)
 - **6333**: Qdrant (vector database)
+- **8001-8003**: Mock Restaurant Servers (Day 4)
 - **4001-4003**: Restaurant Agents (future - Day 4)
 - **3003**: Transaction Simulator (future - Day 5)
+
+### Mock Restaurant Servers (Day 4)
+
+The **Mock Restaurant Web Servers** simulate real restaurant websites with A2A (Agent-to-Agent) endpoints for transaction processing:
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│ Consumer Agent  │───▶│  Mock Restaurant │───▶│  Transaction    │
+│ (CLI/Web)      │    │  Server          │    │  Logic          │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+                              │
+                              ▼
+                       ┌──────────────────┐
+                       │  A2A Endpoints  │
+                       │  • /a2a/menu    │
+                       │  • /a2a/order/* │
+                       │  • /a2a/validate│
+                       └──────────────────┘
+```
+
+**Restaurants:**
+- **OTTO Portland** (Port 8001): Italian pizza restaurant
+- **Street Exeter** (Port 8002): International fusion restaurant  
+- **Newick's Lobster House** (Port 8003): Seafood restaurant
+
+**Key Features:**
+- OSF endpoints (`.well-known/osf.json`)
+- A2A transaction endpoints
+- Order state machine (CREATED → CONFIRMED → SETTLED)
+- Mock payment processing
+- Offer validation and application
 
 ### MCP Server Architecture
 

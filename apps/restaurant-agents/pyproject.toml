@@ -1,0 +1,25 @@
+[project]
+name = "restaurant-agents"
+version = "0.1.0"
+description = "LangGraph-based restaurant agents with A2A protocol support"
+authors = [
+    {name = "Demo Team", email = "demo@example.com"}
+]
+dependencies = [
+    "fastapi>=0.104.1",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.5.0",
+    "python-multipart>=0.0.6",
+    "requests>=2.31.0",
+    "langgraph>=0.6.0",
+    "langchain>=0.2.0",
+    "langchain-openai>=0.1.0",
+    "langchain-core>=0.2.0",
+]
+requires-python = ">=3.9"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.0.0",
+    "httpx>=0.25.0",
+]

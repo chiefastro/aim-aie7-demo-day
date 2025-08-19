@@ -1,0 +1,275 @@
+{
+  "restaurant": "Newick's Lobster House",
+  "items": [
+    {
+      "id": "lunch_bay_scallops",
+      "name": "Lunch Bay Scallops",
+      "description": "Fresh bay scallops sautéed with butter and herbs",
+      "price": 16.00,
+      "category": "Seafood",
+      "available": true,
+      "dietary_tags": ["gluten-free"]
+    },
+    {
+      "id": "lunch_calamari",
+      "name": "Lunch Calamari",
+      "description": "Crispy fried calamari with marinara sauce",
+      "price": 14.00,
+      "category": "Seafood",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "lunch_chicken_tenders",
+      "name": "Lunch Chicken Tenders",
+      "description": "Crispy chicken tenders with choice of dipping sauce",
+      "price": 13.00,
+      "category": "Chicken",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "lunch_strips",
+      "name": "Lunch Strips",
+      "description": "Fish strips with tartar sauce and fries",
+      "price": 17.00,
+      "category": "Seafood",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "lunch_coconut_shrimp",
+      "name": "Lunch Coconut Shrimp",
+      "description": "Coconut-crusted shrimp with sweet chili sauce",
+      "price": 16.00,
+      "category": "Seafood",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "lunch_fantail_shrimp",
+      "name": "Lunch Fantail Shrimp",
+      "description": "Butterflied shrimp with cocktail sauce",
+      "price": 16.00,
+      "category": "Seafood",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "lunch_gulf_shrimp",
+      "name": "Lunch Gulf Shrimp",
+      "description": "Gulf shrimp with garlic butter sauce",
+      "price": 15.00,
+      "category": "Seafood",
+      "available": true,
+      "dietary_tags": ["gluten-free"]
+    },
+    {
+      "id": "lunch_filet_of_haddock",
+      "name": "Lunch Filet of Haddock",
+      "description": "Fresh haddock filet with lemon butter sauce",
+      "price": 20.00,
+      "category": "Seafood",
+      "available": true,
+      "dietary_tags": ["gluten-free"]
+    },
+    {
+      "id": "lunch_haddock_nuggets",
+      "name": "Lunch Haddock Nuggets",
+      "description": "Bite-sized haddock nuggets with tartar sauce",
+      "price": 15.00,
+      "category": "Seafood",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "lunch_sea_scallops",
+      "name": "Lunch Sea Scallops",
+      "description": "Large sea scallops with white wine sauce",
+      "price": 33.00,
+      "category": "Seafood",
+      "available": true,
+      "dietary_tags": ["gluten-free"]
+    },
+    {
+      "id": "lunch_whole_clams",
+      "name": "Lunch Whole Clams",
+      "description": "Steamed whole clams with drawn butter",
+      "price": 32.00,
+      "category": "Seafood",
+      "available": true,
+      "dietary_tags": ["gluten-free"]
+    },
+    {
+      "id": "fish_and_chips",
+      "name": "Fish & Chips",
+      "description": "Beer-battered haddock with fries and coleslaw",
+      "price": 16.00,
+      "category": "Seafood",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "bay_scallop_roll",
+      "name": "Bay Scallop Roll",
+      "description": "Bay scallops on a toasted roll with mayo",
+      "price": 15.00,
+      "category": "Sandwiches",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "cheeseburger",
+      "name": "Cheeseburger",
+      "description": "Classic cheeseburger with lettuce, tomato, and fries",
+      "price": 16.00,
+      "category": "Burgers",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "capn_burger",
+      "name": "Cap'n Burger",
+      "description": "Bacon cheeseburger with special sauce",
+      "price": 17.00,
+      "category": "Burgers",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "chicken_salad_sandwich",
+      "name": "Chicken Salad Sandwich",
+      "description": "Homemade chicken salad on wheat bread",
+      "price": 12.00,
+      "category": "Sandwiches",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "chicken_sandwich_broiled",
+      "name": "Chicken Sandwich Broiled",
+      "description": "Broiled chicken breast with lettuce and tomato",
+      "price": 14.00,
+      "category": "Sandwiches",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "chicken_sandwich_fried",
+      "name": "Chicken Sandwich Fried",
+      "description": "Crispy fried chicken breast with mayo",
+      "price": 14.00,
+      "category": "Sandwiches",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "clam_roll",
+      "name": "Clam Roll",
+      "description": "Fried clams on a toasted roll with tartar sauce",
+      "price": 37.00,
+      "category": "Sandwiches",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "fish_tacos",
+      "name": "Fish Tacos",
+      "description": "Grilled fish tacos with cabbage slaw and chipotle sauce",
+      "price": 16.00,
+      "category": "Tacos",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "grilled_cheese",
+      "name": "Grilled Cheese",
+      "description": "Classic grilled cheese sandwich with tomato soup",
+      "price": 8.00,
+      "category": "Sandwiches",
+      "available": true,
+      "dietary_tags": ["vegetarian"]
+    },
+    {
+      "id": "haddock_sandwich_broiled",
+      "name": "Haddock Sandwich Broiled",
+      "description": "Broiled haddock filet with lettuce and tartar sauce",
+      "price": 17.00,
+      "category": "Sandwiches",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "haddock_sandwich_fried",
+      "name": "Haddock Sandwich Fried",
+      "description": "Beer-battered haddock with lettuce and tartar sauce",
+      "price": 17.00,
+      "category": "Sandwiches",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "hamburger",
+      "name": "Hamburger",
+      "description": "Classic hamburger with lettuce, tomato, and fries",
+      "price": 15.00,
+      "category": "Burgers",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "lobster_roll_petite",
+      "name": "Lobster Roll Petite",
+      "description": "Petite lobster roll with mayo and celery",
+      "price": 34.00,
+      "category": "Sandwiches",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "lobster_roll_original",
+      "name": "Lobster Roll Original",
+      "description": "Original lobster roll with mayo and celery",
+      "price": 40.00,
+      "category": "Sandwiches",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "lobster_roll_jumbo",
+      "name": "Lobster Roll Jumbo",
+      "description": "Jumbo lobster roll with mayo and celery",
+      "price": 44.00,
+      "category": "Sandwiches",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "shrimp_roll",
+      "name": "Shrimp Roll",
+      "description": "Shrimp salad on a toasted roll with mayo",
+      "price": 15.00,
+      "category": "Sandwiches",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "tuna_melt_panini",
+      "name": "Tuna Melt on Panini",
+      "description": "Tuna melt with cheese on pressed panini bread",
+      "price": 12.00,
+      "category": "Sandwiches",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "veggie_burger",
+      "name": "Veggie Burger",
+      "description": "Plant-based burger with lettuce, tomato, and fries",
+      "price": 14.00,
+      "category": "Burgers",
+      "available": true,
+      "dietary_tags": ["vegetarian", "vegan"]
+    }
+  ]
+}

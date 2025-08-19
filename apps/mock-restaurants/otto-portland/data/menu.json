@@ -1,0 +1,95 @@
+{
+  "restaurant": "OTTO Portland",
+  "items": [
+    {
+      "id": "cheese_pizza",
+      "name": "Cheese Pizza",
+      "description": "Classic Neapolitan-style cheese pizza with fresh mozzarella",
+      "price": 13.00,
+      "category": "Pizza",
+      "available": true,
+      "dietary_tags": ["vegetarian"]
+    },
+    {
+      "id": "otto_four_cheese",
+      "name": "OTTO Four Cheese Pizza",
+      "description": "Four cheese pizza with mozzarella, ricotta, parmesan, and gorgonzola",
+      "price": 16.50,
+      "category": "Pizza",
+      "available": true,
+      "dietary_tags": ["vegetarian"]
+    },
+    {
+      "id": "margherita",
+      "name": "Margherita",
+      "description": "Traditional margherita with tomato sauce, mozzarella, and basil",
+      "price": 16.50,
+      "category": "Pizza",
+      "available": true,
+      "dietary_tags": ["vegetarian"]
+    },
+    {
+      "id": "house_salad",
+      "name": "House Salad",
+      "description": "Fresh mixed greens with tomatoes, cucumbers, and house dressing",
+      "price": 7.25,
+      "category": "Salads",
+      "available": true,
+      "dietary_tags": ["vegetarian", "gluten-free"]
+    },
+    {
+      "id": "caesar_salad",
+      "name": "Caesar Salad",
+      "description": "Romaine lettuce with caesar dressing, parmesan, and croutons",
+      "price": 8.25,
+      "category": "Salads",
+      "available": true,
+      "dietary_tags": ["gluten-free"]
+    },
+    {
+      "id": "cobb_salad",
+      "name": "Cobb Salad",
+      "description": "Mixed greens with chicken, bacon, eggs, avocado, and blue cheese",
+      "price": 10.25,
+      "category": "Salads",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "pesto_mozzarella_salad",
+      "name": "Pesto Mozzarella Salad",
+      "description": "Fresh mozzarella with pesto, tomatoes, and balsamic glaze",
+      "price": 11.75,
+      "category": "Salads",
+      "available": true,
+      "dietary_tags": ["vegetarian", "gluten-free"]
+    },
+    {
+      "id": "meatball_sub",
+      "name": "Meatball Sub",
+      "description": "Italian meatballs with marinara sauce on a fresh roll",
+      "price": 13.00,
+      "category": "Sandwiches",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "garlic_sticks",
+      "name": "Garlic Sticks",
+      "description": "Fresh baked breadsticks with garlic butter and parmesan",
+      "price": 9.00,
+      "category": "Appetizers",
+      "available": true,
+      "dietary_tags": ["vegetarian"]
+    },
+    {
+      "id": "stuffed_mushrooms",
+      "name": "Stuffed Mushrooms",
+      "description": "Mushroom caps stuffed with breadcrumbs, herbs, and cheese",
+      "price": 11.50,
+      "category": "Appetizers",
+      "available": true,
+      "dietary_tags": ["vegetarian"]
+    }
+  ]
+}

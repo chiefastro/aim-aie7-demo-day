@@ -87,48 +87,139 @@ services:
     profiles:
       - future
 
-  # Restaurant Agents (placeholder for Day 4)
+  # Mock Restaurant Web Servers (Day 4)
+  otto-portland:
+    build:
+      context: ./apps/mock-restaurants
+      dockerfile: Dockerfile
+    container_name: otto-portland
+    ports:
+      - "8001:8001"
+    command: ["uv", "run", "python", "otto-portland/main.py"]
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./apps/mock-restaurants/otto-portland/data:/app/otto-portland/data:ro
+    networks:
+      - acp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  toast-street-exeter:
+    build:
+      context: ./apps/mock-restaurants
+      dockerfile: Dockerfile
+    container_name: toast-street-exeter
+    ports:
+      - "8002:8002"
+    command: ["uv", "run", "python", "toast-street-exeter/main.py"]
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./apps/mock-restaurants/toast-street-exeter/data:/app/toast-street-exeter/data:ro
+    networks:
+      - acp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  newicks-lobster-house:
+    build:
+      context: ./apps/mock-restaurants
+      dockerfile: Dockerfile
+    container_name: newicks-lobster-house
+    ports:
+      - "8003:8003"
+    command: ["uv", "run", "python", "newicks-lobster-house/main.py"]
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./apps/mock-restaurants/newicks-lobster-house/data:/app/newicks-lobster-house/data:ro
+    networks:
+      - acp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Restaurant Agents (Day 4)
   restaurant-agent-otto:
     build:
       context: ./apps/restaurant-agents
       dockerfile: Dockerfile
+    container_name: restaurant-agent-otto
     ports:
       - "4001:4001"
     environment:
       - AGENT_ID=otto_portland
       - PORT=4001
+      - PYTHONPATH=/app
+    env_file:
+      - ./apps/restaurant-agents/.env
     networks:
       - acp-network
-    profiles:
-      - future
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    command: ["uv", "run", "python", "-m", "restaurant_agents.otto_portland"]
 
   restaurant-agent-street:
     build:
       context: ./apps/restaurant-agents
       dockerfile: Dockerfile
+    container_name: restaurant-agent-street
     ports:
       - "4002:4002"
     environment:
       - AGENT_ID=street_exeter
       - PORT=4002
+      - PYTHONPATH=/app
+    env_file:
+      - ./apps/restaurant-agents/.env
     networks:
       - acp-network
-    profiles:
-      - future
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    command: ["uv", "run", "python", "-m", "restaurant_agents.street_exeter"]
 
   restaurant-agent-newicks:
     build:
       context: ./apps/restaurant-agents
       dockerfile: Dockerfile
+    container_name: restaurant-agent-newicks
     ports:
       - "4003:4003"
     environment:
       - AGENT_ID=newicks_lobster
       - PORT=4003
+      - PYTHONPATH=/app
+    env_file:
+      - ./apps/restaurant-agents/.env
     networks:
       - acp-network
-    profiles:
-      - future
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    command: ["uv", "run", "python", "-m", "restaurant_agents.newicks_lobster"]
 
 volumes:
   qdrant_data:

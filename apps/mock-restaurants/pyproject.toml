@@ -1,0 +1,25 @@
+[project]
+name = "mock-restaurants"
+version = "0.1.0"
+description = "Mock restaurant web servers with A2A endpoints for demo purposes"
+authors = [
+    {name = "Demo Team", email = "demo@example.com"}
+]
+dependencies = [
+    "fastapi>=0.104.1",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.5.0",
+    "python-multipart>=0.0.6",
+    "requests>=2.31.0",
+]
+requires-python = ">=3.8"
+
+
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.0.0",
+    "httpx>=0.25.0",
+]
+
+

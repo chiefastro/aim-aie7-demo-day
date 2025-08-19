@@ -1,0 +1,99 @@
+{
+  "offer_id": "ofr_001",
+  "offer_version": "1.0",
+  "created_at": "2025-01-15T00:00:00Z",
+  "updated_at": "2025-01-15T00:00:00Z",
+  "expires_at": "2025-02-15T00:00:00Z",
+  
+  "title": "Street Exeter Lunch Offer",
+  "description": "Lunch special at Street Exeter. Get $2.50 back when you spend $15 or more on lunch items.",
+  
+  "content": {
+    "restaurant_description": "Street Exeter is an international fusion restaurant serving Korean BBQ Beef Bibimbap ($23.00), Chicken Cemita ($17.00), Vietnamese Chicken Bibimbap ($23.00), Crispy Rice Cakes ($10.50), Gobi 65 ($12.00), Curry Fries ($13.00), Reg Fries ($5.20), Subarashi Fries ($13.00), Korean Tenders ($14.00), Southern Tenders ($14.00), Dumplings Con Pow! ($14.00), Shrimp Con Pow! ($17.00), Thai Ribs ($14.00), Empanada ($12.00), Chips and Salsa ($5.00), Fish Taco ($8.00) and more. Open 11:30 am - 8:30 pm. Located in 8 Clifford Street, Exeter, NH 03833.",
+    "featured_items": [
+      "Korean BBQ Beef Bibimbap - $23.00",
+      "Chicken Cemita - $17.00",
+      "Vietnamese Chicken Bibimbap - $23.00",
+      "Crispy Rice Cakes - $10.50",
+      "Gobi 65 - $12.00"
+    ],
+    "cuisine_type": "international fusion",
+    "price_range": "$$",
+    "dietary_options": ["vegetarian", "vegan"]
+  },
+  
+  "terms": {
+    "min_spend": 15.0,
+    "max_discount": 2.50,
+    "valid_days": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+    "valid_hours": {
+      "start": "11:30",
+      "end": "20:30"
+    },
+    "restrictions": [
+      "Valid for dine-in and takeout orders",
+      "Cannot be combined with other offers",
+      "Valid only at this location"
+    ]
+  },
+  
+  "bounty": {
+    "amount": 2.50,
+    "currency": "USD",
+    "revenue_split": {
+      "consumer": 50,
+      "merchant": 40,
+      "platform": 10
+    }
+  },
+  
+  "merchant": {
+    "id": "toast_street_exeter_8_clifford_street",
+    "name": "Street Exeter 8 Clifford Street",
+    "location": {
+      "lat": 42.9814,
+      "lng": -70.9478,
+      "address": "8 Clifford Street, Exeter, NH 03833",
+      "city": "Exeter",
+      "state": "NH",
+      "zip": "03833"
+    },
+    "phone": "Call",
+    "hours": ["11:30 am - 8:30 pm"]
+  },
+  
+  "attribution": {
+    "method": "receipt_upload",
+    "instructions": "Upload your receipt after dining to receive your bounty",
+    "required_fields": ["total_amount", "date", "items"]
+  },
+  
+  "provenance": {
+    "source": "merchant_direct",
+    "verified": true,
+    "last_verified": "2025-01-15T00:00:00Z"
+  },
+  
+  "labels": [
+    "korean", "asian", "mexican", "indian", "fusion", "lunch", "midday", "dine-in", "takeout", "exeter-nh", "new-hampshire", "seacoast"
+  ],
+  
+  "search_metadata": {
+    "cuisine": "international fusion",
+    "price_range": "$$",
+    "location": {
+      "city": "Exeter",
+      "state": "NH",
+      "coordinates": [-70.9478, 42.9814]
+    },
+    "meal_type": "lunch",
+    "dietary_restrictions": ["vegetarian", "vegan"],
+    "popular_items": [
+      "Korean BBQ Beef Bibimbap - $23.00",
+      "Chicken Cemita - $17.00",
+      "Vietnamese Chicken Bibimbap - $23.00",
+      "Crispy Rice Cakes - $10.50",
+      "Gobi 65 - $12.00"
+    ]
+  }
+}
