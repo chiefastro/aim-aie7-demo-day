@@ -106,5 +106,6 @@ class RestaurantConfig(BaseModel):
     osf_endpoint: str
     a2a_endpoints: Dict[str, str]
     menu_endpoint: str
+    well_known_endpoint: str
     agent_capabilities: List[AgentCapability]
     default_policies: Dict[str, Any] = {}

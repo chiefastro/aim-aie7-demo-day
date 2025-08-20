@@ -173,7 +173,7 @@ services:
       timeout: 10s
       retries: 3
     restart: unless-stopped
-    command: ["uv", "run", "python", "-m", "restaurant_agents.otto_portland"]
+    command: ["uv", "run", "python", "-m", "restaurant_agents.a2a_server", "--restaurant-id", "otto_portland", "--port", "4001", "--host", "0.0.0.0"]
 
   restaurant-agent-street:
     build:
@@ -196,7 +196,7 @@ services:
       timeout: 10s
       retries: 3
     restart: unless-stopped
-    command: ["uv", "run", "python", "-m", "restaurant_agents.street_exeter"]
+    command: ["uv", "run", "python", "-m", "restaurant_agents.a2a_server", "--restaurant-id", "street_exeter", "--port", "4002", "--host", "0.0.0.0"]
 
   restaurant-agent-newicks:
     build:
@@ -219,7 +219,7 @@ services:
       timeout: 10s
       retries: 3
     restart: unless-stopped
-    command: ["uv", "run", "python", "-m", "restaurant_agents.newicks_lobster"]
+    command: ["uv", "run", "python", "-m", "restaurant_agents.a2a_server", "--restaurant-id", "newicks_lobster", "--port", "4003", "--host", "0.0.0.0"]
 
 volumes:
   qdrant_data:

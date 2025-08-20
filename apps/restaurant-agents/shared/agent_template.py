@@ -1,11 +1,21 @@
 import asyncio
 import json
 import requests
+import os
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
+from pathlib import Path
+from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from langgraph.graph import StateGraph, END
+
+# Load environment variables from .env file
+env_path = Path(__file__).parent.parent / ".env"
+if env_path.exists():
+    load_dotenv(env_path)
+else:
+    load_dotenv()  # Fallback to default .env location
 
 from .models import (
     AgentState, OrderState, RestaurantConfig, A2AEnvelope,
