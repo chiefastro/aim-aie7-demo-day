@@ -98,7 +98,7 @@ status: ## Show status of all services
 	docker-compose ps
 
 # Quick start commands
-start: ## Start all services (GOR, MCP, mock restaurants, restaurant agents)
+start: ## Start all services (GOR, MCP, mock restaurants, restaurant agents, transaction simulator)
 	@echo "🚀 Starting all ACP demo services..."
 	docker-compose up -d
 
@@ -114,12 +114,13 @@ health: ## Check health of all services
 	@echo "🏥 Checking service health..."
 	@echo "Qdrant: $(shell curl -s http://localhost:6333/health | jq -r '.status' 2>/dev/null || echo 'unavailable')"
 	@echo "GOR API: $(shell curl -s http://localhost:3001/health | jq -r '.status' 2>/dev/null || echo 'unavailable')"
+	@echo "Transaction Simulator: $(shell curl -s http://localhost:3003/health | jq -r '.status' 2>/dev/null || echo 'unavailable')"
 	@echo "OTTO Portland: $(shell curl -s http://localhost:8001/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
 	@echo "Street Exeter: $(shell curl -s http://localhost:8002/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
 	@echo "Newick's Lobster: $(shell curl -s http://localhost:8003/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
-	@echo "OTTO Agent: $(shell curl -s http://localhost:4001/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
-	@echo "Street Agent: $(shell curl -s http://localhost:4002/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
-	@echo "Newick's Agent: $(shell curl -s http://localhost:4003/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
+	@echo "OTTO Agent: $(shell curl -s http://localhost:4001/health | jq -r '.status' 2>/dev/null || echo 'unavailable')"
+	@echo "Street Agent: $(shell curl -s http://localhost:4002/health | jq -r '.status' 2>/dev/null || echo 'unavailable')"
+	@echo "Newick's Agent: $(shell curl -s http://localhost:4003/health | jq -r '.status' 2>/dev/null || echo 'unavailable')"
 
 # Quick start
 start: ## Quick start - build and run core stack
@@ -129,6 +130,7 @@ start: ## Quick start - build and run core stack
 	@echo "✅ Core stack started!"
 	@echo "📊 GOR API: http://localhost:3001"
 	@echo "🗄️  Qdrant: http://localhost:6333"
+	@echo "💰 Transaction Simulator: http://localhost:3003"
 	@echo "🍕 Mock Restaurants: http://localhost:8001-8003 (run: make restaurants)"
 
 # Demo workflow
@@ -179,6 +181,26 @@ agents-logs: ## Show logs for all restaurant agents
 agents-local: ## Start restaurant agents locally (requires uv)
 	@echo "🤖 Starting restaurant agents locally..."
 	@cd apps/restaurant-agents && make start-all
+
+# Transaction Simulator (Day 5)
+tx-simulator: ## Start Transaction Simulator
+	docker-compose up -d tx-simulator
+
+tx-simulator-stop: ## Stop Transaction Simulator
+	docker-compose stop tx-simulator
+
+tx-simulator-build: ## Build Transaction Simulator Docker image
+	docker-compose build tx-simulator
+
+tx-simulator-restart: ## Restart Transaction Simulator
+	docker-compose restart tx-simulator
+
+tx-simulator-logs: ## Show logs for Transaction Simulator
+	docker-compose logs -f tx-simulator
+
+tx-simulator-local: ## Start Transaction Simulator locally (requires uv)
+	@echo "💰 Starting Transaction Simulator locally..."
+	@cd apps/tx-simulator && uv run python -m src.tx_simulator.main
 
 # Data management
 ingest: ## Trigger offer ingestion in GOR
