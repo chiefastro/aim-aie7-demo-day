@@ -62,7 +62,7 @@ data/osf/toast_otto_portland/
 - **ACP Labels**: pizza, italian, salad, dine-in, takeout
 
 ### 🍔 **Street Exeter - Exeter, NH** (American/Comfort Food)
-- **URL**: https://www.toasttab.com/local/order/street-exeter-8-clifford-street-cmaxy
+- **URL**: https://www.toasttab.com/local/order/street-exeter-8-clifford-st-cmaxy
 - **Address**: 8 Clifford Street, Exeter, NH
 - **Real Menu Items**:
   - **Featured Items**: Korean BBQ Beef Bibimbap ($23.00), Chicken Cemita ($17.00)
@@ -156,8 +156,6 @@ uv sync
 uv run python -m mcp_offers
 ```
 
-
-
 ### Configuration
 
 **Simple Text File (Recommended)**
@@ -168,7 +166,7 @@ Edit `config/restaurants.txt` with one URL per line:
 # Lines starting with # are comments
 
 https://www.toasttab.com/local/order/otto-portland-dover-nh
-https://www.toasttab.com/local/order/street-exeter-8-clifford-street-cmaxy
+https://www.toasttab.com/local/order/street-exeter-8-clifford-st-cmaxy
 https://www.toasttab.com/local/order/newicks-lobster-house-dover-431-dover-point-rd
 ```
 
@@ -176,8 +174,6 @@ https://www.toasttab.com/local/order/newicks-lobster-house-dover-431-dover-point
 ```bash
 npm run add-url https://www.toasttab.com/local/order/restaurant-url
 ```
-
-
 
 **Auto-Detection Features:**
 - Restaurant names extracted from scraped data
@@ -197,7 +193,6 @@ npm run add-url https://www.toasttab.com/local/order/restaurant-url
 - [x] **MCP Offers Server**: Wraps GOR API with standardized MCP tools
 - [x] **Semantic Search Tools**: `offers.search`, `offers.getById`, `offers.nearby`
 - [x] **GOR Integration**: Direct connection to Global Offer Registry
-
 
 ### Day 4: Restaurant Agents ✅
 - [x] Create mock restaurant web servers
@@ -221,12 +216,36 @@ npm run add-url https://www.toasttab.com/local/order/restaurant-url
 - [ ] Documentation and schema validation
 - [ ] Demo video recording
 
+## 🚀 **NEW: ACP SDK Implementation**
+
+**What Changed**: Instead of building bespoke A2A implementations for each restaurant, we've created a **standardized ACP SDK** that any merchant can use.
+
+**Benefits**:
+- **Universal Compatibility**: Any merchant can implement ACP skills
+- **No More Bespoke Code**: Standardized commerce capabilities across all merchants
+- **Future-Proof**: Easy to add new merchants without custom development
+- **Maintains Original Plan**: Still need offer feeds, GOR, attribution, and settlement
+
+### **ACP SDK Components**
+
+1. **Standardized Commerce Skills**: Order management, payment, inventory, offers
+2. **A2A Integration**: Extends A2A agents with commerce capabilities
+3. **Merchant Customization**: Full flexibility while maintaining compliance
+4. **HITL Support**: Built-in human-in-the-loop workflows
+
+### **Implementation Status**
+
+- ✅ **ACP SDK Core**: Working Python SDK with standardized commerce skills
+- ✅ **OTTO Portland Example**: Complete implementation using ACP SDK
+- 🔄 **Next**: Update existing restaurant agents to use ACP SDK
+- 🔄 **Next**: Build Universal Commerce MCP Server (replaces bespoke MCP servers)
+
 ## Architecture Overview
 
 ```
-Consumer Agent (MCP) → GOR (Search) → Restaurant Agents (A2A) → Transaction Simulator
+Consumer Agent (MCP) → GOR (Search) → Restaurant Agents (A2A + ACP Skills) → Transaction Simulator
        ↓                      ↓                    ↓                    ↓
-   MCP Tools           Vector Search         Order Flow          Wallet/Ledger
+   MCP Tools           Vector Search         Standardized Skills    Wallet/Ledger
 ```
 
 ### 🐳 Docker Architecture
@@ -324,6 +343,7 @@ The **MCP Offers Server** provides the semantic layer that connects consumer age
 
 - **OSF**: Offer Syndication Feed (`.well-known/osf.json`)
 - **Offer Document**: Individual offer with terms, attribution, provenance
+- **ACP Skills**: Standardized commerce capabilities for A2A agents
 - **Attribution Receipt**: Transaction proof from consumer to GOR
 - **Settlement Postback**: Merchant confirmation to transaction simulator
 
@@ -349,3 +369,67 @@ The **MCP Offers Server** provides the semantic layer that connects consumer age
 - REST API for discovery
 - CORS support for cross-origin access
 - Screenshot and HTML capture for debugging
+
+### ✅ **A2A Integration**
+- Restaurant agents with A2A endpoints
+- Order state machine (CREATED → CONFIRMED → SETTLED)
+- Mock payment processing
+- Offer validation and application
+
+### ✅ **ACP SDK Innovation**
+- **Standardized Commerce Skills**: Universal interface for all merchants
+- **A2A Extension**: Seamlessly extends existing A2A agents
+- **Merchant Customization**: Full flexibility while maintaining compliance
+- **Working Implementation**: OTTO Portland example successfully demonstrates the approach
+
+## 🚀 **Getting Started with ACP SDK**
+
+### **1. Set Up Development Environment**
+```bash
+# Clone and setup
+git clone <repo>
+cd aim-aie7-demo-day
+
+# Install Python dependencies
+uv sync
+```
+
+### **2. Test ACP SDK**
+```bash
+cd apps/acp-sdk
+uv pip install -e .
+cd examples
+uv run python otto_portland_example.py
+```
+
+### **3. Integrate with Restaurant Agents**
+```bash
+# Start restaurant agents
+cd apps/restaurant-agents
+uv run python -m restaurant_agents.otto_portland
+
+# Test ACP SDK integration
+cd apps/acp-sdk
+uv run python -m acp_sdk.test_integration
+```
+
+## 🤝 **Contributing to ACP**
+
+We're building the foundation for universal agentic commerce. Key areas for contribution:
+
+1. **ACP Skill Definitions**: Standardize commerce capabilities
+2. **SDK Development**: Python and TypeScript implementations
+3. **Restaurant Agent Migration**: Update existing agents to use ACP SDK
+4. **Testing & Validation**: Ensure interoperability across merchants
+5. **Documentation**: Protocol specifications and implementation guides
+
+## 📚 **Resources & References**
+
+- **A2A Protocol**: [a2a-protocol.org](https://a2a-protocol.org/dev/)
+- **Commerce Agent Protocol**: [cap-spec.org](https://cap-spec.org/)
+- **Model Context Protocol**: [mcp.dev](https://mcp.dev/)
+- **ACP Specification**: [Coming Soon] - We're writing this!
+
+---
+
+**Next Up**: Updating restaurant agents to use ACP SDK, then building the Universal Commerce MCP Server to replace bespoke implementations! 🚀
