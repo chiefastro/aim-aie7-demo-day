@@ -97,11 +97,29 @@ check-python: ## Check available Python interpreters
 status: ## Show status of all services
 	docker-compose ps
 
+# Quick start commands
+start: ## Start all services (GOR, MCP, mock restaurants, restaurant agents)
+	@echo "🚀 Starting all ACP demo services..."
+	docker-compose up -d
+
+start-agents: ## Start only restaurant agents
+	@echo "🤖 Starting restaurant agents..."
+	make agents
+
+start-restaurants: ## Start only mock restaurants
+	@echo "🍕 Starting mock restaurants..."
+	make restaurants
+
 health: ## Check health of all services
 	@echo "🏥 Checking service health..."
 	@echo "Qdrant: $(shell curl -s http://localhost:6333/health | jq -r '.status' 2>/dev/null || echo 'unavailable')"
 	@echo "GOR API: $(shell curl -s http://localhost:3001/health | jq -r '.status' 2>/dev/null || echo 'unavailable')"
-	@echo "MCP Server: $(shell curl -s http://localhost:3002/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable (run manually: cd apps/mcp-offers && make run)')"
+	@echo "OTTO Portland: $(shell curl -s http://localhost:8001/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
+	@echo "Street Exeter: $(shell curl -s http://localhost:8002/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
+	@echo "Newick's Lobster: $(shell curl -s http://localhost:8003/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
+	@echo "OTTO Agent: $(shell curl -s http://localhost:4001/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
+	@echo "Street Agent: $(shell curl -s http://localhost:4002/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
+	@echo "Newick's Agent: $(shell curl -s http://localhost:4003/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
 
 # Quick start
 start: ## Quick start - build and run core stack
@@ -110,8 +128,8 @@ start: ## Quick start - build and run core stack
 	make up
 	@echo "✅ Core stack started!"
 	@echo "📊 GOR API: http://localhost:3001"
-	@echo "🔧 MCP Server: http://localhost:3002 (run manually: cd apps/mcp-offers && make run)"
 	@echo "🗄️  Qdrant: http://localhost:6333"
+	@echo "🍕 Mock Restaurants: http://localhost:8001-8003 (run: make restaurants)"
 
 # Demo workflow
 workflow: ## Run complete demo workflow
@@ -129,6 +147,38 @@ gor: ## Start only GOR API and Qdrant
 mcp: ## Start MCP server (requires GOR to be running)
 	@echo "🔧 Starting MCP server manually..."
 	@cd apps/mcp-offers && make run
+
+# Mock Restaurant Servers (Day 4)
+restaurants: ## Start all mock restaurant servers
+	docker-compose up -d otto-portland toast-street-exeter newicks-lobster-house
+
+restaurants-local: ## Start mock restaurants locally (requires uv)
+	@echo "🍕 Starting mock restaurants locally..."
+	@cd apps/mock-restaurants && make start-all
+
+restaurants-build: ## Build mock restaurant Docker images
+	@echo "🏗️ Building mock restaurant images..."
+	@cd apps/mock-restaurants && make docker-build
+
+# Restaurant Agents (Day 4)
+agents: ## Start all restaurant agents
+	docker-compose up -d restaurant-agent-otto restaurant-agent-street restaurant-agent-newicks
+
+agents-stop: ## Stop all restaurant agents
+	docker-compose stop restaurant-agent-otto restaurant-agent-street restaurant-agent-newicks
+
+agents-build: ## Build restaurant agent Docker images
+	docker-compose build restaurant-agent-otto restaurant-agent-street restaurant-agent-newicks
+
+agents-restart: ## Restart all restaurant agents
+	docker-compose restart restaurant-agent-otto restaurant-agent-street restaurant-agent-newicks
+
+agents-logs: ## Show logs for all restaurant agents
+	docker-compose logs -f restaurant-agent-otto restaurant-agent-street restaurant-agent-newicks
+
+agents-local: ## Start restaurant agents locally (requires uv)
+	@echo "🤖 Starting restaurant agents locally..."
+	@cd apps/restaurant-agents && make start-all
 
 # Data management
 ingest: ## Trigger offer ingestion in GOR

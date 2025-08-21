@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  restaurant-agent-otto:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: restaurant-agent-otto
+    ports:
+      - "4001:4001"
+    environment:
+      - AGENT_ID=otto_portland
+      - PORT=4001
+      - PYTHONPATH=/app
+    env_file:
+      - .env
+    networks:
+      - restaurant-agent-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    command: ["uv", "run", "python", "-m", "restaurant_agents.otto_portland"]
+
+  restaurant-agent-street:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: restaurant-agent-street
+    ports:
+      - "4002:4002"
+    environment:
+      - AGENT_ID=street_exeter
+      - PORT=4002
+      - PYTHONPATH=/app
+    env_file:
+      - .env
+    networks:
+      - restaurant-agent-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    command: ["uv", "run", "python", "-m", "restaurant_agents.street_exeter"]
+
+  restaurant-agent-newicks:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: restaurant-agent-newicks
+    ports:
+      - "4003:4003"
+    environment:
+      - AGENT_ID=newicks_lobster
+      - PORT=4003
+      - PYTHONPATH=/app
+    env_file:
+      - .env
+    networks:
+      - restaurant-agent-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    command: ["uv", "run", "python", "-m", "restaurant_agents.newicks_lobster"]
+
+networks:
+  restaurant-agent-network:
+    driver: bridge

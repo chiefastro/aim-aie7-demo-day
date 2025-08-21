@@ -1,0 +1,149 @@
+{
+  "restaurant": "Street Exeter",
+  "items": [
+    {
+      "id": "korean_bbq_beef_bibimbap",
+      "name": "Korean BBQ Beef Bibimbap",
+      "description": "Traditional Korean rice bowl with marinated beef, vegetables, and gochujang sauce",
+      "price": 23.00,
+      "category": "Korean",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "chicken_cemita",
+      "name": "Chicken Cemita",
+      "description": "Mexican sandwich with breaded chicken, avocado, chipotle sauce, and queso fresco",
+      "price": 17.00,
+      "category": "Mexican",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "vietnamese_chicken_bibimbap",
+      "name": "Vietnamese Chicken Bibimbap",
+      "description": "Vietnamese-style rice bowl with grilled chicken, fresh herbs, and nuoc cham",
+      "price": 23.00,
+      "category": "Vietnamese",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "crispy_rice_cakes",
+      "name": "Crispy Rice Cakes",
+      "description": "Crispy rice cakes with spicy sauce and green onions",
+      "price": 10.50,
+      "category": "Appetizers",
+      "available": true,
+      "dietary_tags": ["vegetarian"]
+    },
+    {
+      "id": "gobi_65",
+      "name": "Gobi 65",
+      "description": "Spicy fried cauliflower with Indian spices",
+      "price": 12.00,
+      "category": "Appetizers",
+      "available": true,
+      "dietary_tags": ["vegetarian", "vegan"]
+    },
+    {
+      "id": "curry_fries",
+      "name": "Curry Fries",
+      "description": "Crispy fries topped with curry sauce and fresh herbs",
+      "price": 13.00,
+      "category": "Sides",
+      "available": true,
+      "dietary_tags": ["vegetarian"]
+    },
+    {
+      "id": "reg_fries",
+      "name": "Reg Fries",
+      "description": "Classic crispy french fries",
+      "price": 5.20,
+      "category": "Sides",
+      "available": true,
+      "dietary_tags": ["vegetarian", "vegan"]
+    },
+    {
+      "id": "subarashi_fries",
+      "name": "Subarashi Fries",
+      "description": "Fries topped with Japanese mayo, bonito flakes, and nori",
+      "price": 13.00,
+      "category": "Sides",
+      "available": true,
+      "dietary_tags": ["vegetarian"]
+    },
+    {
+      "id": "korean_tenders",
+      "name": "Korean Tenders",
+      "description": "Crispy chicken tenders with Korean BBQ sauce",
+      "price": 14.00,
+      "category": "Chicken",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "southern_tenders",
+      "name": "Southern Tenders",
+      "description": "Southern-style fried chicken tenders with honey mustard",
+      "price": 14.00,
+      "category": "Chicken",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "dumplings_con_pow",
+      "name": "Dumplings Con Pow!",
+      "description": "Pan-fried dumplings with spicy sauce and green onions",
+      "price": 14.00,
+      "category": "Appetizers",
+      "available": true,
+      "dietary_tags": ["vegetarian"]
+    },
+    {
+      "id": "shrimp_con_pow",
+      "name": "Shrimp Con Pow!",
+      "description": "Spicy shrimp with garlic, ginger, and green onions",
+      "price": 17.00,
+      "category": "Seafood",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "thai_ribs",
+      "name": "Thai Ribs",
+      "description": "Sticky Thai-style ribs with sweet and spicy glaze",
+      "price": 14.00,
+      "category": "Appetizers",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "empanada",
+      "name": "Empanada",
+      "description": "Traditional Latin American pastry filled with beef and vegetables",
+      "price": 12.00,
+      "category": "Appetizers",
+      "available": true,
+      "dietary_tags": []
+    },
+    {
+      "id": "chips_and_salsa",
+      "name": "Chips and Salsa",
+      "description": "Fresh tortilla chips with house-made salsa",
+      "price": 5.00,
+      "category": "Appetizers",
+      "available": true,
+      "dietary_tags": ["vegetarian", "vegan"]
+    },
+    {
+      "id": "fish_taco",
+      "name": "Fish Taco",
+      "description": "Grilled fish taco with cabbage slaw and chipotle crema",
+      "price": 8.00,
+      "category": "Tacos",
+      "available": true,
+      "dietary_tags": []
+    }
+  ]
+}

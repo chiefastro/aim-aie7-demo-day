@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  otto-portland:
+    build: .
+    container_name: otto-portland
+    ports:
+      - "8001:8001"
+    command: ["uv", "run", "python", "otto-portland/main.py"]
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./otto-portland/data:/app/otto-portland/data:ro
+    networks:
+      - restaurant-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  toast-street-exeter:
+    build: .
+    container_name: toast-street-exeter
+    ports:
+      - "8002:8002"
+    command: ["uv", "run", "python", "toast-street-exeter/main.py"]
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./toast-street-exeter/data:/app/toast-street-exeter/data:ro
+    networks:
+      - restaurant-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  newicks-lobster-house:
+    build: .
+    container_name: newicks-lobster-house
+    ports:
+      - "8003:8003"
+    command: ["uv", "run", "python", "newicks-lobster-house/main.py"]
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./newicks-lobster-house/data:/app/newicks-lobster-house/data:ro
+    networks:
+      - restaurant-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  restaurant-network:
+    driver: bridge
