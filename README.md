@@ -23,7 +23,7 @@ This repository contains a working prototype of the Agentic Commerce Protocol (A
    - ✅ **Provides REST API endpoints for OSF and offer discovery**
    - ✅ **Includes CORS support for cross-origin access**
 
-### ✅ Day 2 Complete: ACP-MCP Server and Restaurant Agent Integration
+### ✅ Day 4 Complete: ACP-MCP Server and Restaurant Agent Integration
 
 4. **ACP-MCP Server** (`apps/acp-mcp/`)
    - ✅ **Model Context Protocol (MCP) server for agent consumption**

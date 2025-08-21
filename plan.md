@@ -307,7 +307,7 @@ Day 3 ✅
 - Implement MCP server wrapping GOR
 - MCP server provides semantic search tools for consumer agents
 
-Day 4
+Day 4 ✅
 - Create mock restaurant web servers on localhost that have any endpoints needed to complete a transaction
 - Implement Restaurant Agent template and spin up 3 instances (configs per merchant) - these will be LangGraph agents that make any API calls needed to execute a transaction, and that interact with the user as needed to gather order details.
 - Implement A2A endpoints and order state machine - these will be exposed on the fake web servers for the consumer agent to discover in a well known location
