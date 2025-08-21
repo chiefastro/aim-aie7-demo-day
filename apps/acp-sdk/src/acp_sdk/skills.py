@@ -9,6 +9,7 @@ compliance with the ACP protocol.
 import asyncio
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, Type, Union
+from datetime import datetime
 
 from a2a.types import AgentSkill
 
@@ -276,6 +277,135 @@ class CustomerServiceSkill(BaseCommerceSkill):
                 skill_name=self.skill_name,
                 task_id=task.task_id
             )
+
+
+class LLMEnhancedSkill(BaseCommerceSkill):
+    """
+    Base class for skills that integrate with LLMs for enhanced capabilities.
+    
+    This allows merchants to add AI-powered features like:
+    - Natural language understanding
+    - Contextual responses
+    - Intelligent recommendations
+    - Dynamic pricing
+    - Customer preference learning
+    """
+    
+    def __init__(self, llm_client=None, vector_store=None, **kwargs):
+        super().__init__(**kwargs)
+        self.llm_client = llm_client
+        self.vector_store = vector_store
+        self.conversation_history = []
+        
+    async def _enhance_with_llm(self, task: CommerceTask, context: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Enhance task processing with LLM capabilities.
+        
+        Override this method to add AI-powered features to your skills.
+        """
+        if not self.llm_client:
+            return context
+            
+        # Example: Use LLM to understand customer intent
+        prompt = self._build_llm_prompt(task, context)
+        response = await self.llm_client.agenerate(prompt)
+        
+        # Extract insights from LLM response
+        enhanced_context = self._extract_llm_insights(response, context)
+        return enhanced_context
+    
+    def _build_llm_prompt(self, task: CommerceTask, context: Dict[str, Any]) -> str:
+        """Build a prompt for the LLM based on the task and context."""
+        return f"""
+        Task: {task.task_type}
+        Context: {context}
+        Conversation History: {self.conversation_history[-5:] if self.conversation_history else 'None'}
+        
+        Please analyze this request and provide insights about:
+        1. Customer intent and preferences
+        2. Recommended actions
+        3. Potential upselling opportunities
+        4. Risk factors
+        """
+    
+    def _extract_llm_insights(self, llm_response: str, context: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract useful insights from LLM response."""
+        # This is a simplified example - in practice, you'd use structured output
+        enhanced_context = context.copy()
+        enhanced_context['llm_insights'] = {
+            'customer_intent': 'extracted from llm_response',
+            'recommendations': 'extracted from llm_response',
+            'risk_factors': 'extracted from llm_response'
+        }
+        return enhanced_context
+    
+    def add_to_conversation_history(self, message: Dict[str, Any]):
+        """Add a message to the conversation history."""
+        self.conversation_history.append(message)
+        
+        # Keep only last 20 messages to prevent memory bloat
+        if len(self.conversation_history) > 20:
+            self.conversation_history = self.conversation_history[-20:]
+
+
+class LLMEnhancedOrderSkill(LLMEnhancedSkill, OrderManagementSkill):
+    """
+    Order management skill with LLM capabilities.
+    
+    Example customizations:
+    - Intelligent menu recommendations
+    - Dynamic pricing based on demand
+    - Customer preference learning
+    - Upselling suggestions
+    """
+    
+    async def _handle_order_task(self, task):
+        """Handle order with LLM enhancement."""
+        # Enhance context with LLM insights
+        enhanced_context = await self._enhance_with_llm(task, {
+            'items': [item.dict() for item in task.items],
+            'customer_id': getattr(task, 'customer_id', None),
+            'time_of_day': datetime.now().hour
+        })
+        
+        # Use LLM insights for intelligent processing
+        if enhanced_context.get('llm_insights', {}).get('upselling_opportunity'):
+            # Add recommended items
+            pass
+            
+        # Process order with enhanced context
+        return await super()._handle_order_task(task)
+
+
+class LLMEnhancedPaymentSkill(LLMEnhancedSkill, PaymentProcessingSkill):
+    """
+    Payment processing skill with LLM capabilities.
+    
+    Example customizations:
+    - Fraud detection
+    - Payment method recommendations
+    - Dynamic pricing
+    - Risk assessment
+    """
+    
+    async def _process_payment(self, payment_request):
+        """Process payment with LLM enhancement."""
+        # Enhance with fraud detection
+        enhanced_context = await self._enhance_with_llm(
+            CommerceTask(task_type="process_payment", task_id="temp"),
+            {
+                'amount': payment_request.amount,
+                'payment_method': payment_request.payment_method,
+                'customer_history': 'retrieved from database'
+            }
+        )
+        
+        # Check for fraud indicators
+        if enhanced_context.get('llm_insights', {}).get('risk_factors'):
+            # Implement fraud prevention logic
+            pass
+            
+        return await super()._process_payment(payment_request)
 
 
 class CommerceSkills:

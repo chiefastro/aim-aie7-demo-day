@@ -52,6 +52,51 @@ class PaymentMethod(str, Enum):
     BANK_TRANSFER = "bank_transfer"
 
 
+class AgentCapability(str, Enum):
+    """Standard ACP agent capabilities."""
+    PRESENT_OFFER = "present_offer"
+    INITIATE_CHECKOUT = "initiate_checkout"
+    CONFIRM_ORDER = "confirm_order"
+    VALIDATE_OFFER = "validate_offer"
+    PROCESS_PAYMENT = "process_payment"
+    GET_MENU = "get_menu"
+    TRACK_ORDER = "track_order"
+
+
+class ACPConfig(BaseModel):
+    """Standardized configuration for ACP agents."""
+    agent_id: str = Field(..., description="Unique agent identifier")
+    name: str = Field(..., description="Agent display name")
+    description: str = Field(..., description="Agent description")
+    version: str = Field("1.0.0", description="Agent version")
+    
+    # Endpoints
+    osf_endpoint: str = Field(..., description="OSF discovery endpoint")
+    menu_endpoint: str = Field(..., description="Menu retrieval endpoint")
+    a2a_endpoints: Dict[str, str] = Field(default_factory=dict, description="A2A operation endpoints")
+    
+    # Capabilities
+    capabilities: List[AgentCapability] = Field(default_factory=list, description="Supported capabilities")
+    
+    # Configuration
+    default_policies: Dict[str, Any] = Field(default_factory=dict, description="Default agent policies")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
+    
+    # Server configuration
+    host: str = Field("localhost", description="Server host")
+    port: int = Field(4001, description="Server port")
+    
+    @property
+    def restaurant_id(self) -> str:
+        """Backward compatibility property."""
+        return self.agent_id
+    
+    @property
+    def well_known_endpoint(self) -> str:
+        """Generate well-known endpoint URL."""
+        return f"http://{self.host}:{self.port}/.well-known/agent-card.json"
+
+
 class OrderItem(BaseModel):
     """Individual item in an order."""
     name: str = Field(..., description="Item name")

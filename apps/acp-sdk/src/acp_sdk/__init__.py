@@ -1,19 +1,14 @@
 """
-Agentic Commerce Protocol (ACP) SDK for Python.
+ACP SDK - Standardized commerce capabilities for A2A agents.
 
-This SDK provides standardized commerce skills for A2A agents,
-enabling universal commerce integration across all merchants.
+This package provides a complete framework for creating A2A agents with
+standardized commerce capabilities while maintaining compliance with the ACP protocol.
 """
 
-from .core import ACPAgent, CommerceSkills
-from .skills import (
-    OrderManagementSkill,
-    PaymentProcessingSkill,
-    OfferManagementSkill,
-    InventoryManagementSkill,
-    CustomerServiceSkill,
-)
+from .core import ACPAgent
 from .models import (
+    ACPConfig,
+    AgentCapability,
     CommerceTask,
     CommerceResult,
     OrderTask,
@@ -21,35 +16,69 @@ from .models import (
     OfferTask,
     InventoryTask,
     CustomerServiceTask,
+    OrderResult,
+    PaymentResult,
+    OfferValidationResult,
+    InventoryResult,
+    CustomerServiceResult,
     OrderItem,
     OrderSummary,
-    OrderStatus,
+    OfferDetails,
     PaymentRequest,
     PaymentDetails,
-    PaymentResult,
+    TaskType,
+    OrderStatus,
     PaymentStatus,
     PaymentMethod,
-    OfferDetails,
 )
-from .exceptions import ACPError, SkillExecutionError, ValidationError
+from .skills import (
+    BaseCommerceSkill,
+    OrderManagementSkill,
+    PaymentProcessingSkill,
+    OfferManagementSkill,
+    InventoryManagementSkill,
+    CustomerServiceSkill,
+    CommerceSkills,
+    LLMEnhancedSkill,
+    LLMEnhancedOrderSkill,
+    LLMEnhancedPaymentSkill,
+)
+from .executor import ACPBaseExecutor
+from .server import ACPServer, create_acp_server
+from .exceptions import (
+    ACPError,
+    ConfigurationError,
+    SkillExecutionError,
+    ValidationError,
+    HITLRequiredError,
+)
 
-__version__ = "0.1.0"
-__author__ = "ACP Team"
-__email__ = "team@acp.dev"
+# Agent framework integrations
+from .agent_frameworks import (
+    AgentFrameworkAdapter,
+    LangGraphACPAdapter,
+    LlamaIndexACPAdapter,
+    AutoGenACPAdapter,
+    ACPAgentFrameworkExecutor,
+    create_langgraph_acp_agent,
+    create_llamaindex_acp_agent,
+    create_autogen_acp_agent,
+)
+
+__version__ = "1.0.0"
 
 __all__ = [
-    # Core components
+    # Core classes
     "ACPAgent",
-    "CommerceSkills",
+    "ACPBaseExecutor",
+    "ACPServer",
+    "create_acp_server",
     
-    # Skills
-    "OrderManagementSkill",
-    "PaymentProcessingSkill", 
-    "OfferManagementSkill",
-    "InventoryManagementSkill",
-    "CustomerServiceSkill",
+    # Configuration and models
+    "ACPConfig",
+    "AgentCapability",
     
-    # Models
+    # Task models
     "CommerceTask",
     "CommerceResult",
     "OrderTask",
@@ -57,18 +86,51 @@ __all__ = [
     "OfferTask",
     "InventoryTask",
     "CustomerServiceTask",
+    "OrderResult",
+    "PaymentResult",
+    "OfferValidationResult",
+    "InventoryResult",
+    "CustomerServiceResult",
+    
+    # Data models
     "OrderItem",
     "OrderSummary",
-    "OrderStatus",
+    "OfferDetails",
     "PaymentRequest",
     "PaymentDetails",
-    "PaymentResult",
+    
+    # Enums
+    "TaskType",
+    "OrderStatus",
     "PaymentStatus",
     "PaymentMethod",
-    "OfferDetails",
+    
+    # Skills
+    "BaseCommerceSkill",
+    "OrderManagementSkill",
+    "PaymentProcessingSkill",
+    "OfferManagementSkill",
+    "InventoryManagementSkill",
+    "CustomerServiceSkill",
+    "CommerceSkills",
+    "LLMEnhancedSkill",
+    "LLMEnhancedOrderSkill",
+    "LLMEnhancedPaymentSkill",
     
     # Exceptions
     "ACPError",
+    "ConfigurationError",
     "SkillExecutionError",
     "ValidationError",
+    "HITLRequiredError",
+    
+    # Agent Framework Integrations
+    "AgentFrameworkAdapter",
+    "LangGraphACPAdapter",
+    "LlamaIndexACPAdapter",
+    "AutoGenACPAdapter",
+    "ACPAgentFrameworkExecutor",
+    "create_langgraph_acp_agent",
+    "create_llamaindex_acp_agent",
+    "create_autogen_acp_agent",
 ]
