@@ -7,10 +7,11 @@ import json
 import logging
 from typing import Any, Dict, List, Optional
 from datetime import datetime
+from uuid import uuid4
 
 import httpx
 from a2a.client import A2AClient as BaseA2AClient, A2ACardResolver
-from a2a.types import AgentCard, Task
+from a2a.types import AgentCard, MessageSendParams, SendMessageRequest
 
 from .models import (
     CommerceRequest,
@@ -358,35 +359,104 @@ class ACPClient:
         return None
 
     async def _execute_a2a_task(self, task_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Execute A2A task using send_message."""
+        """Execute A2A task using send_message with proper message format."""
         try:
             # Create task input as JSON string
             task_input = json.dumps(task_data, default=str)  # Use default=str to handle Decimal types
             
+            # Create proper A2A message format
+            send_message_payload: dict[str, Any] = {
+                'message': {
+                    'role': 'user',
+                    'parts': [
+                        {'kind': 'text', 'text': task_input}
+                    ],
+                    'message_id': uuid4().hex,
+                },
+            }
+            
+            request = SendMessageRequest(
+                id=str(uuid4()), 
+                params=MessageSendParams(**send_message_payload)
+            )
+            
             # Send message to A2A agent
             logger.info(f"Sending task to A2A agent: {task_input}")
-            response = await self.base_client.send_message(task_input)
+            response = await self.base_client.send_message(request)
             logger.info(f"Received response from A2A agent: {response}")
+            logger.info(f"Response type: {type(response)}")
+            logger.info(f"Response attributes: {dir(response)}")
+            if hasattr(response, 'root'):
+                logger.info(f"Response root: {response.root}")
+                if hasattr(response.root, 'result'):
+                    logger.info(f"Response result: {response.root.result}")
+                    if hasattr(response.root.result, 'content'):
+                        logger.info(f"Response content: {response.root.result.content}")
+                        logger.info(f"Response content type: {type(response.root.result.content)}")
+                        logger.info(f"Response content length: {len(str(response.root.result.content))}")
+            else:
+                logger.info("Response has no 'root' attribute")
+                logger.info(f"Response dir: {dir(response)}")
+                # Try to find content in other attributes
+                for attr in dir(response):
+                    if not attr.startswith('_'):
+                        try:
+                            value = getattr(response, attr)
+                            logger.info(f"Response.{attr}: {value}")
+                        except:
+                            pass
             
             # Parse the response
-            if hasattr(response, 'content') and response.content:
-                try:
-                    # Try to parse as JSON
-                    if isinstance(response.content, str):
-                        result_data = json.loads(response.content)
-                    else:
-                        result_data = response.content
-                    
+            if hasattr(response, 'root') and hasattr(response.root, 'result'):
+                # Extract content from the response
+                result = response.root.result
+                
+                # Try to get content from artifacts first (this is where the restaurant agent puts the data)
+                if hasattr(result, 'artifacts') and result.artifacts:
+                    for artifact in result.artifacts:
+                        if hasattr(artifact, 'parts') and artifact.parts:
+                            for part in artifact.parts:
+                                if hasattr(part, 'root') and hasattr(part.root, 'text'):
+                                    content = part.root.text
+                                    logger.info(f"Found content in artifact: {content[:200]}...")
+                                    
+                                    # Try to parse content as JSON first
+                                    try:
+                                        if isinstance(content, str):
+                                            result_data = json.loads(content)
+                                        else:
+                                            result_data = content
+                                        
+                                        return {
+                                            "success": True,
+                                            "data": result_data,
+                                            "error_message": None
+                                        }
+                                    except json.JSONDecodeError:
+                                        # If not JSON, parse the text response to extract structured data
+                                        return self._parse_text_response(content, task_data)
+                
+                # Fallback to old method
+                if hasattr(result, 'content') and result.content:
+                    # Try to parse content as JSON first
+                    try:
+                        if isinstance(result.content, str):
+                            result_data = json.loads(result.content)
+                        else:
+                            result_data = result.content
+                        
+                        return {
+                            "success": True,
+                            "data": result_data,
+                            "error_message": None
+                        }
+                    except json.JSONDecodeError:
+                        # If not JSON, parse the text response to extract structured data
+                        return self._parse_text_response(result.content, task_data)
+                else:
                     return {
                         "success": True,
-                        "data": result_data,
-                        "error_message": None
-                    }
-                except json.JSONDecodeError:
-                    # If not JSON, treat as text response
-                    return {
-                        "success": True,
-                        "data": {"message": response.content},
+                        "data": {"message": "Task completed"},
                         "error_message": None
                     }
             else:
@@ -405,6 +475,115 @@ class ACPClient:
             }
 
 
+
+    def _parse_text_response(self, text_content: str, task_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Parse text response from restaurant agents to extract structured data."""
+        operation = task_data.get("operation", "")
+        
+        if operation == "get_menu":
+            return self._parse_menu_response(text_content)
+        elif operation == "order_food":
+            return self._parse_order_response(text_content)
+        elif operation == "process_payment":
+            return self._parse_payment_response(text_content)
+        elif operation == "validate_offer":
+            return self._parse_offer_response(text_content)
+        else:
+            return {"message": text_content}
+    
+    def _parse_menu_response(self, text_content: str) -> Dict[str, Any]:
+        """Parse menu response text to extract menu items."""
+        menu_items = []
+        categories = []
+        current_category = None
+        
+        lines = text_content.split('\n')
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            
+            # Check for category headers (all caps followed by colon)
+            if line.isupper() and line.endswith(':'):
+                current_category = line[:-1].title()  # Remove colon and title case
+                categories.append(current_category)
+            # Check for menu items (start with bullet point)
+            elif line.startswith('•') and current_category:
+                # Extract item name and price
+                item_text = line[1:].strip()  # Remove bullet point
+                if ' - $' in item_text:
+                    name_part, price_part = item_text.split(' - $', 1)
+                    name = name_part.strip()
+                    try:
+                        price = float(price_part.strip())
+                        menu_items.append({
+                            "name": name,
+                            "price": price,
+                            "category": current_category,
+                            "available": True
+                        })
+                    except ValueError:
+                        # If price parsing fails, just add the name
+                        menu_items.append({
+                            "name": name,
+                            "price": 0.0,
+                            "category": current_category,
+                            "available": True
+                        })
+        
+        return {
+            "menu_items": menu_items,
+            "categories": categories,
+            "message": text_content
+        }
+    
+    def _parse_order_response(self, text_content: str) -> Dict[str, Any]:
+        """Parse order response text to extract order details."""
+        import re
+        
+        # Extract order ID
+        order_id_match = re.search(r'Order\s+(\w+)\s+created', text_content)
+        order_id = order_id_match.group(1) if order_id_match else "N/A"
+        
+        # Extract total amount
+        total_match = re.search(r'Total:\s+\$([\d.]+)', text_content)
+        total = float(total_match.group(1)) if total_match else 0.0
+        
+        return {
+            "order_id": order_id,
+            "total": total,
+            "status": "created",
+            "message": text_content
+        }
+    
+    def _parse_payment_response(self, text_content: str) -> Dict[str, Any]:
+        """Parse payment response text to extract payment details."""
+        import re
+        
+        # Extract payment amount
+        amount_match = re.search(r'\$([\d.]+)', text_content)
+        amount = float(amount_match.group(1)) if amount_match else 0.0
+        
+        # Extract order ID
+        order_match = re.search(r'order\s+(\w+)', text_content)
+        order_id = order_match.group(1) if order_match else "N/A"
+        
+        return {
+            "payment_id": f"pay_{order_id}_{int(datetime.now().timestamp())}",
+            "order_id": order_id,
+            "amount": amount,
+            "status": "completed",
+            "message": text_content
+        }
+    
+    def _parse_offer_response(self, text_content: str) -> Dict[str, Any]:
+        """Parse offer validation response text."""
+        is_valid = "valid" in text_content.lower() and "not valid" not in text_content.lower()
+        
+        return {
+            "is_valid": is_valid,
+            "message": text_content
+        }
 
     def _convert_from_a2a_result(self, a2a_result: Dict[str, Any], request_id: str) -> CommerceResponse:
         """Convert A2A result to CommerceResponse."""

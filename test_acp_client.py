@@ -50,6 +50,10 @@ async def test_acp_client():
         if response.success:
             print("✅ Menu retrieval successful")
             print(f"   Data: {response.data}")
+            if response.data and 'menu_items' in response.data:
+                print(f"   Menu items found: {len(response.data['menu_items'])}")
+                for item in response.data['menu_items'][:3]:  # Show first 3 items
+                    print(f"     - {item.get('name', 'N/A')}: ${item.get('price', 'N/A')}")
         else:
             print(f"❌ Menu retrieval failed: {response.error_message}")
     except Exception as e:
