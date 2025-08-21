@@ -23,9 +23,6 @@ COPY apps/acp-sdk/ ./acp-sdk/
 # Install dependencies (create lock file if it doesn't exist)
 RUN uv sync
 
-# Copy shared code
-COPY apps/restaurant-agents/shared/ ./shared/
-
 # Copy restaurant agents code
 COPY apps/restaurant-agents/restaurant_agents/ ./restaurant_agents/
 
