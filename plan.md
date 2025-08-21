@@ -164,32 +164,67 @@ Vercel for deployment
 - Generates `/.well-known/osf.json` and individual ACP Offer Documents per merchant from scraped data
 - For demo, serve these statically via a tiny HTTP server
 
-3. Global Offer Registry (GOR)
+3. **ACP SDK** - **NEW: Standardized Restaurant Agent Implementation**
+- **Python ACP SDK**: Core commerce skills that any merchant can implement
+  - Base commerce skills (order, payment, inventory, offers, customer service)
+  - A2A integration framework for extending existing agents
+  - Merchant customization framework while maintaining compliance
+  - HITL workflow support for complex transactions
+  - Multi-language foundation (Python + TypeScript roadmap)
+- **Standardized Skills**: Every merchant implements the same interface
+  - Order Management: create, modify, cancel, track orders
+  - Payment Processing: process payments, validate offers, handle refunds
+  - Offer Management: validate offers, apply discounts, check eligibility
+  - Inventory Management: query menu, check availability, get pricing
+  - Customer Service: handle inquiries, provide support, track issues
+- **Benefits**: Eliminates bespoke code, enables universal MCP server, future-proofs merchant integration
+
+4. Global Offer Registry (GOR)
 - Ingests OSF endpoints (seed list), fetches referenced ACP Offer Documents
 - Normalizes, validates, and indexes into Qdrant vector database
 - Hybrid search with custom scoring: semantic relevance + geo proximity decay + time freshness decay
 - Search API: semantic queries with geo and time weighting
 
-4. MCP Server (Offers)
-- Tools:
+5. MCP Server (Offers) - **Enhanced with Universal Commerce MCP**
+- **Universal Commerce MCP Server**: Single server that works with any ACP-compliant merchant
+  - Merchant discovery via A2A agent cards
+  - Standardized MCP tools for all commerce operations
+  - A2A client for any ACP-compliant merchant
+  - Consistent response formatting across all merchants
+  - Graceful error handling and fallbacks
+- **Legacy MCP Tools** (for offer discovery):
   - `offers.search(query, lat, lng, radius_m, labels[])`
   - `offers.getById(offer_id)`
   - `offers.nearby(lat, lng, radius_m)`
-- Backed by GOR Search API
+- **New Universal Commerce Tools**:
+  - `commerce.order_food(restaurant_id, items, offer_id)`
+  - `commerce.validate_offer(restaurant_id, offer_id, items)`
+  - `commerce.process_payment(restaurant_id, order_id, payment_method)`
+  - `commerce.track_order(restaurant_id, order_id)`
+- Backed by GOR Search API + ACP-compliant restaurant agents
 
-5. Restaurant Agents (one per merchant)
+6. Restaurant Agents (one per merchant) - **Enhanced with ACP SDK**
+- **ACP SDK Implementation**: Standardized commerce skills instead of bespoke A2A code
+  - Order Management: Handle food orders, modifications, and cancellations
+  - Payment Processing: Process payments and validate offers
+  - Offer Management: Validate and apply offers to orders
+  - Inventory Management: Query menu items and check availability
+  - Customer Service: Handle customer inquiries and order tracking
+- **A2A Integration**: Extends A2A agents with standardized commerce capabilities
+- **Merchant Customization**: Full flexibility while maintaining compliance
+- **HITL Support**: Built-in human-in-the-loop workflows for complex transactions
 - HTTP service exposing A2A endpoints:
   - POST /a2a/present_offer → returns offer summary and constraints
   - POST /a2a/initiate_checkout → allocates mock order_id, returns payment instructions (mock)
   - POST /a2a/confirm_order → finalizes, triggers Settlement Postback to Transaction Simulator
 - Minimal state machine: CREATED → CONFIRMED → SETTLED (or FAILED)
 
-6. Transaction Simulator
+7. Transaction Simulator
 - Issues Attribution Receipts on initiate_checkout
 - Accepts Settlement Postbacks, computes split, and writes to a ledger
 - Exposes /wallets/:user_id to read balances
 
-7. Consumer Agent (demo driver)
+8. Consumer Agent (demo driver)
 - Uses MCP tools to discover offers and call restaurant A2A endpoints
 - CLI or simple web UI to show steps, receipt, and wallet balance
 
@@ -251,6 +286,18 @@ Day 4
 - Implement Restaurant Agent template and spin up 3 instances (configs per merchant) - these will be LangGraph agents that make any API calls needed to execute a transaction, and that interact with the user as needed to gather order details.
 - Implement A2A endpoints and order state machine - these will be exposed on the fake web servers for the consumer agent to discover in a well known location
 
+Day 4.5 - **Universal Commerce MCP Server** (NEW)
+- Build Universal Commerce MCP Server that works with any ACP-compliant merchant
+- Implement merchant discovery via A2A agent cards
+- Create standardized MCP tools for all commerce operations
+- Test interoperability with ACP-compliant restaurant agents
+- **Replace bespoke MCP implementations** with universal approach
+- **ACP SDK Integration**: Update restaurant agents to use standardized ACP SDK instead of bespoke A2A implementations
+  - Migrate OTTO Portland to ACP SDK
+  - Migrate Street Exeter to ACP SDK  
+  - Migrate Newick's Lobster House to ACP SDK
+  - Test ACP compliance and skill interoperability
+
 Day 5
 - Implement Transaction Simulator: receipts, postbacks, ledger, wallet endpoint
 - Wire Restaurant Agents → Transaction Simulator
@@ -298,10 +345,12 @@ Day 7
 
 ```
 apps/
+  acp-sdk/                # Python ACP SDK with standardized commerce skills ✅
+  universal-commerce-mcp/  # Universal MCP server for all ACP-compliant merchants
   gor-api/                # GOR ingest + search HTTP API
-  mcp-offers/             # MCP server exposing GOR
+  mcp-offers/             # Legacy MCP server exposing GOR (will be enhanced)
   tx-simulator/           # receipts, postbacks, wallet
-  agent-restaurant-*/     # per-merchant agents (3 copies or one app with configs)
+  restaurant-agents/      # A2A agents using ACP SDK (enhanced)
 
 data/
   scraped/                # raw snapshots
@@ -314,11 +363,21 @@ docs/
 
 #### 12) Acceptance Criteria
 
-- At least 3 ACP OSF endpoints valid against schema
-- GOR returns relevant offers by semantic search with geo/time decay ranking
-- MCP tools operational from a consumer agent
-- Restaurant Agent completes the state machine and emits postbacks
-- Transaction Simulator produces a receipt and updates wallet
-- Live demo runs in <5 minutes end-to-end
+- **ACP SDK**: ✅ Core commerce skills implemented and tested
+- **Universal MCP Server**: [ ] Works with any ACP-compliant merchant
+- **Restaurant Agent Migration**: [ ] All restaurant agents use ACP SDK instead of bespoke implementations
+- **Interoperability**: [ ] Universal MCP server can discover and interact with any compliant merchant
+- **Customization**: [ ] Merchants can customize logic while maintaining compliance
+- **Original System Requirements**:
+  - At least 3 ACP OSF endpoints valid against schema
+  - GOR returns relevant offers by semantic search with geo/time decay ranking
+  - MCP tools operational from a consumer agent
+  - Restaurant Agent completes the state machine and emits postbacks
+  - Transaction Simulator produces a receipt and updates wallet
+  - Live demo runs in <5 minutes end-to-end
+
+**Key Success Metric**: **Zero bespoke MCP servers** - one universal server works with all merchants through standardized ACP skills, while maintaining all original offer discovery, attribution, and settlement functionality.
+
+**Timeline Note**: ACP SDK and Universal Commerce MCP Server are implemented in Day 4.5, after restaurant agents are working with ACP skills, enabling us to test the universal approach with real, compliant agents.
 
 
