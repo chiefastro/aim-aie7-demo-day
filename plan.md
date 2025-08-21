@@ -312,12 +312,12 @@ Day 4
 - Implement Restaurant Agent template and spin up 3 instances (configs per merchant) - these will be LangGraph agents that make any API calls needed to execute a transaction, and that interact with the user as needed to gather order details.
 - Implement A2A endpoints and order state machine - these will be exposed on the fake web servers for the consumer agent to discover in a well known location
 
-Day 4.5 - **Universal Commerce MCP Server** (NEW)
-- Build Universal Commerce MCP Server that works with any ACP-compliant merchant
-- Implement merchant discovery via A2A agent cards
-- Create standardized MCP tools for all commerce operations
-- Test interoperability with ACP-compliant restaurant agents
-- **Replace bespoke MCP implementations** with universal approach
+Day 4.5 - **ACP MCP Server** ✅ (COMPLETED)
+- ✅ Built ACP MCP Server that works with any ACP-compliant merchant
+- ✅ Implemented merchant discovery via A2A agent cards
+- ✅ Created standardized MCP tools for all commerce operations
+- ✅ Used FastMCP with async decorators following best practices
+- ✅ **Replaced bespoke MCP implementations** with universal approach
 - **ACP SDK Integration**: Update restaurant agents to use standardized ACP SDK instead of bespoke A2A implementations
   - Migrate OTTO Portland to ACP SDK
   - Migrate Street Exeter to ACP SDK  
@@ -407,7 +407,7 @@ docs/
 #### 12) Acceptance Criteria
 
 - **ACP SDK**: ✅ Core commerce skills implemented and tested
-- **Universal MCP Server**: [ ] Works with any ACP-compliant merchant
+- **ACP MCP Server**: ✅ Works with any ACP-compliant merchant
 - **Restaurant Agent Migration**: [ ] All restaurant agents use ACP SDK instead of bespoke implementations
 - **Interoperability**: [ ] Universal MCP server can discover and interact with any compliant merchant
 - **Customization**: [ ] Merchants can customize logic while maintaining compliance
