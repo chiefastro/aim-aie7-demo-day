@@ -19,8 +19,9 @@ dependencies = [
     "click>=8.0.0",
     "httpx>=0.25.0",
     "python-dotenv>=1.0.0",
+    "acp-sdk @ file:///app/acp-sdk",
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 
 [tool.uv]
 dev-dependencies = [

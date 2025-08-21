@@ -1,0 +1,65 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "acp-mcp"
+version = "0.1.0"
+description = "ACP MCP Server - Universal commerce MCP server for ACP-compliant merchants"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "ACP Team", email = "team@acp.dev"}
+]
+maintainers = [
+    {name = "ACP Team", email = "team@acp.dev"}
+]
+keywords = ["acp", "mcp", "commerce", "agents", "protocol", "universal"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Office/Business :: Financial :: Point-Of-Sale",
+]
+requires-python = ">=3.11"
+dependencies = [
+    "mcp>=1.0.0",
+    "acp-sdk>=0.1.0",
+    "a2a-sdk[http-server]>=0.3.0",
+    "pydantic>=2.0.0",
+    "typing-extensions>=4.0.0",
+    "httpx>=0.24.0",
+    "asyncio-mqtt>=0.16.0",
+    "fastapi>=0.104.1",
+    "uvicorn[standard]>=0.24.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "mypy>=1.0.0",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+acp-mcp = "acp_mcp.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/acp_mcp"]
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88

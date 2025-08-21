@@ -15,19 +15,22 @@ RUN pip install uv
 WORKDIR /app
 
 # Copy pyproject.toml
-COPY pyproject.toml ./
+COPY apps/restaurant-agents/pyproject.toml ./
+
+# Copy ACP SDK first
+COPY apps/acp-sdk/ ./acp-sdk/
 
 # Install dependencies (create lock file if it doesn't exist)
 RUN uv sync
 
 # Copy shared code
-COPY shared/ ./shared/
+COPY apps/restaurant-agents/shared/ ./shared/
 
 # Copy restaurant agents code
-COPY restaurant_agents/ ./restaurant_agents/
+COPY apps/restaurant-agents/restaurant_agents/ ./restaurant_agents/
 
 # Copy environment file
-COPY .env ./
+COPY apps/restaurant-agents/.env ./
 
 # Expose ports
 EXPOSE 4001 4002 4003
