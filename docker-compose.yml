@@ -73,19 +73,26 @@ services:
 
 
 
-  # Transaction Simulator (placeholder for Day 5)
+  # Transaction Simulator (Day 5)
   tx-simulator:
     build:
       context: ./apps/tx-simulator
       dockerfile: Dockerfile
+    container_name: acp-tx-simulator
     ports:
       - "3003:3003"
     environment:
       - PORT=3003
+      - PYTHONPATH=/app/src
     networks:
       - acp-network
-    profiles:
-      - future
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
 
   # Mock Restaurant Web Servers (Day 4)
   otto-portland:
