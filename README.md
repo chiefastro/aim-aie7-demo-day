@@ -413,6 +413,97 @@ cd apps/acp-sdk
 uv run python -m acp_sdk.test_integration
 ```
 
+## 🤖 **Auto-ACP Toolkit: Browser Agent for Merchant Discovery**
+
+### **What is Auto-ACP?**
+
+The **Auto-ACP Toolkit** is an intelligent browser agent that automatically discovers and analyzes merchant websites to understand their commerce workflows, then auto-generates ACP-compliant merchant agents using the ACP SDK.
+
+### **How It Works**
+
+1. **Website Discovery**: Browser agent navigates to a merchant's website
+2. **Workflow Analysis**: Analyzes the site structure, forms, and user flows
+3. **Commerce Mapping**: Identifies ordering, payment, and fulfillment processes
+4. **ACP Generation**: Auto-generates ACP SDK compliant skills and merchant agent
+5. **Validation**: Tests the generated agent against the actual website
+
+### **Key Features**
+
+- **Intelligent Navigation**: Uses AI to understand site structure and find commerce flows
+- **Form Analysis**: Automatically maps form fields to ACP skill parameters
+- **Workflow Detection**: Identifies ordering, payment, and fulfillment processes
+- **ACP Compliance**: Generates standardized ACP SDK skills that work with any merchant
+- **Testing Framework**: Validates generated agents against real websites
+- **Customization Support**: Allows merchants to customize generated agents
+
+### **Use Cases**
+
+- **New Merchant Onboarding**: Automatically create ACP agents for new merchants
+- **Website Updates**: Re-analyze sites when they change and update agents
+- **Compliance Validation**: Ensure merchants maintain ACP compliance
+- **Rapid Prototyping**: Quickly test ACP integration with new merchants
+
+### **Technical Architecture**
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│ Merchant Website│───▶│  Browser Agent   │───▶│  ACP Generator  │
+│                 │    │  (Playwright)    │    │  (AI Analysis)  │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+                              │                        │
+                              ▼                        ▼
+                       ┌──────────────────┐    ┌─────────────────┐
+                       │  Workflow        │    │  ACP SDK        │
+                       │  Analysis        │    │  Compliant      │
+                       │  (AI + Rules)    │    │  Merchant Agent │
+                       └──────────────────┘    └─────────────────┘
+```
+
+### **Implementation Plan**
+
+#### **Phase 1: Browser Agent Foundation**
+- Set up Playwright-based browser automation
+- Implement intelligent site navigation and discovery
+- Create workflow analysis engine using AI
+- Build form field mapping and validation
+
+#### **Phase 2: ACP Generation Engine**
+- Develop ACP SDK skill template system
+- Create merchant agent generation framework
+- Implement compliance validation
+- Build testing and validation framework
+
+#### **Phase 3: Integration & Optimization**
+- Integrate with existing ACP SDK
+- Add customization and override capabilities
+- Implement continuous monitoring and updates
+- Create merchant onboarding workflow
+
+### **Benefits**
+
+- **Zero Manual Work**: Automatically discover and integrate new merchants
+- **Universal Compatibility**: Works with any website using standard web patterns
+- **ACP Compliance**: Ensures all generated agents follow ACP standards
+- **Rapid Scaling**: Onboard hundreds of merchants without manual development
+- **Future-Proof**: Adapts to website changes automatically
+
+### **Getting Started with Auto-ACP**
+
+```bash
+# Install Auto-ACP toolkit
+cd apps/auto-acp-toolkit
+uv sync
+
+# Analyze a merchant website
+uv run python -m auto_acp_toolkit.analyze https://example-restaurant.com
+
+# Generate ACP agent
+uv run python -m auto_acp_toolkit.generate --merchant-id example_restaurant
+
+# Test generated agent
+uv run python -m auto_acp_toolkit.test --merchant-id example_restaurant
+```
+
 ## 🤝 **Contributing to ACP**
 
 We're building the foundation for universal agentic commerce. Key areas for contribution:

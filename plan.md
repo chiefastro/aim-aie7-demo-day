@@ -219,6 +219,32 @@ Vercel for deployment
   - POST /a2a/confirm_order → finalizes, triggers Settlement Postback to Transaction Simulator
 - Minimal state machine: CREATED → CONFIRMED → SETTLED (or FAILED)
 
+7. **Auto-ACP Toolkit** - **NEW: Browser Agent for Automatic Merchant Discovery**
+- **Browser Agent Foundation**: Playwright-based automation for merchant website discovery
+  - Intelligent site navigation and structure analysis
+  - AI-powered workflow detection and form mapping
+  - Commerce process identification (ordering, payment, fulfillment)
+- **Workflow Analysis Engine**: AI-driven analysis of merchant websites
+  - Site structure mapping and navigation flow analysis
+  - Form field detection and parameter mapping
+  - Commerce workflow identification and validation
+  - Error handling and edge case detection
+- **ACP Generation Engine**: Auto-generate ACP SDK compliant merchant agents
+  - Template-based ACP skill generation
+  - Merchant-specific customization framework
+  - Compliance validation and testing
+  - Integration with Universal Commerce MCP Server
+- **Validation Framework**: Test generated agents against actual websites
+  - Automated testing of generated ACP skills
+  - End-to-end workflow validation
+  - Performance and reliability testing
+  - Compliance verification against ACP standards
+- **Integration Pipeline**: Seamless integration with existing ACP ecosystem
+  - Auto-registration with Universal Commerce MCP Server
+  - OSF generation and GOR indexing
+  - Merchant onboarding workflow automation
+  - Continuous monitoring and updates
+
 7. Transaction Simulator
 - Issues Attribution Receipts on initiate_checkout
 - Accepts Settlement Postbacks, computes split, and writes to a ledger
@@ -298,6 +324,15 @@ Day 4.5 - **Universal Commerce MCP Server** (NEW)
   - Migrate Newick's Lobster House to ACP SDK
   - Test ACP compliance and skill interoperability
 
+Day 4.75 - **Auto-ACP Toolkit** (NEW)
+- **Browser Agent Foundation**: Set up Playwright-based browser automation for merchant website discovery
+- **Intelligent Navigation**: Implement AI-powered site structure analysis and workflow detection
+- **Form Analysis Engine**: Automatically map form fields to ACP skill parameters
+- **Commerce Workflow Detection**: Identify ordering, payment, and fulfillment processes
+- **ACP Generation Engine**: Auto-generate ACP SDK compliant skills and merchant agents
+- **Validation Framework**: Test generated agents against actual websites
+- **Integration Pipeline**: Connect auto-generated agents with Universal Commerce MCP Server
+
 Day 5
 - Implement Transaction Simulator: receipts, postbacks, ledger, wallet endpoint
 - Wire Restaurant Agents → Transaction Simulator
@@ -338,6 +373,12 @@ Day 7
 - Map view for nearby offers
 - Simple policy-based selection (cheapest delivery fee, fastest prep time)
 - Publisher-side OSF validator CLI
+- **Auto-ACP Advanced Features**:
+  - Multi-language website support (international merchants)
+  - Advanced AI models for complex workflow detection
+  - Real-time website change monitoring and agent updates
+  - Merchant dashboard for managing auto-generated agents
+  - Batch processing for large-scale merchant onboarding
 
 ---
 
@@ -346,6 +387,7 @@ Day 7
 ```
 apps/
   acp-sdk/                # Python ACP SDK with standardized commerce skills ✅
+  auto-acp-toolkit/       # Browser agent for automatic merchant discovery and ACP generation
   universal-commerce-mcp/  # Universal MCP server for all ACP-compliant merchants
   gor-api/                # GOR ingest + search HTTP API
   mcp-offers/             # Legacy MCP server exposing GOR (will be enhanced)
@@ -355,6 +397,7 @@ apps/
 data/
   scraped/                # raw snapshots
   osf/                    # generated osf.json + offers
+  auto-acp/               # auto-generated merchant agents and analysis data
 docs/
   schemas/                # JSON Schema for OSF/Offer/Receipt/Postback
 ```
@@ -368,6 +411,12 @@ docs/
 - **Restaurant Agent Migration**: [ ] All restaurant agents use ACP SDK instead of bespoke implementations
 - **Interoperability**: [ ] Universal MCP server can discover and interact with any compliant merchant
 - **Customization**: [ ] Merchants can customize logic while maintaining compliance
+- **Auto-ACP Toolkit**: [ ] Browser agent can discover and auto-generate ACP agents for new merchants
+  - [ ] Successfully analyzes merchant websites and identifies commerce workflows
+  - [ ] Auto-generates ACP SDK compliant skills and merchant agents
+  - [ ] Validates generated agents against actual websites
+  - [ ] Integrates with Universal Commerce MCP Server
+  - [ ] Supports merchant customization and override capabilities
 - **Original System Requirements**:
   - At least 3 ACP OSF endpoints valid against schema
   - GOR returns relevant offers by semantic search with geo/time decay ranking
@@ -376,7 +425,10 @@ docs/
   - Transaction Simulator produces a receipt and updates wallet
   - Live demo runs in <5 minutes end-to-end
 
-**Key Success Metric**: **Zero bespoke MCP servers** - one universal server works with all merchants through standardized ACP skills, while maintaining all original offer discovery, attribution, and settlement functionality.
+**Key Success Metrics**: 
+- **Zero bespoke MCP servers** - one universal server works with all merchants through standardized ACP skills
+- **Zero manual merchant integration** - Auto-ACP toolkit automatically discovers and integrates new merchants
+- **Universal scalability** - any merchant website can be automatically converted to ACP compliance
 
 **Timeline Note**: ACP SDK and Universal Commerce MCP Server are implemented in Day 4.5, after restaurant agents are working with ACP skills, enabling us to test the universal approach with real, compliant agents.
 
