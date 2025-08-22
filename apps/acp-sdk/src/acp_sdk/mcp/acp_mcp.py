@@ -78,7 +78,7 @@ async def discover_merchants(
             "location": {"lat": lat, "lng": lng, "radius_m": radius_m} if lat and lng else {},
             "cuisine_type": cuisine_type
         }
-        result = handle_discover_merchants(arguments)
+        result = await handle_discover_merchants(arguments)
         return result[0].text if result else "No merchants found"
     except Exception as e:
         logger.error(f"Unexpected error in discover merchants: {e}")
@@ -223,6 +223,56 @@ async def track_order(
         return f"❌ Order tracking failed: {str(e)}"
 
 
+@mcp.tool()
+async def process_settlement(
+    transaction_id: str,
+    order_id: str,
+    merchant_id: str,
+    settlement_amount: float,
+    revenue_split: Dict[str, float]
+) -> str:
+    """Process settlement and revenue distribution for a completed transaction"""
+    try:
+        logger.info(f"Process settlement called with: transaction_id={transaction_id}, order_id={order_id}")
+        
+        arguments = {
+            "transaction_id": transaction_id,
+            "order_id": order_id,
+            "merchant_id": merchant_id,
+            "settlement_amount": settlement_amount,
+            "revenue_split": revenue_split
+        }
+        result = await handle_process_settlement(arguments)
+        return result[0].text if result else "Settlement processing failed"
+    except Exception as e:
+        logger.error(f"Unexpected error in process settlement: {e}")
+        return f"❌ Settlement processing failed: {str(e)}"
+
+
+@mcp.tool()
+async def process_attribution(
+    transaction_id: str,
+    offer_id: str,
+    merchant_id: str,
+    attribution_data: Dict[str, Any]
+) -> str:
+    """Process attribution and tracking for offer usage"""
+    try:
+        logger.info(f"Process attribution called with: transaction_id={transaction_id}, offer_id={offer_id}")
+        
+        arguments = {
+            "transaction_id": transaction_id,
+            "offer_id": offer_id,
+            "merchant_id": merchant_id,
+            "attribution_data": attribution_data
+        }
+        result = await handle_process_attribution(arguments)
+        return result[0].text if result else "Attribution processing failed"
+    except Exception as e:
+        logger.error(f"Unexpected error in process attribution: {e}")
+        return f"❌ Attribution processing failed: {str(e)}"
+
+
 # Offer Discovery Tools
 @mcp.tool()
 def offers_search(
@@ -326,85 +376,123 @@ def offers_nearby(
         return f"❌ Nearby search failed: {str(e)}"
 
 
-def handle_discover_merchants(arguments: Dict[str, Any]) -> List[TextContent]:
-    """Handle discover_merchants tool call"""
+async def handle_discover_merchants(arguments: Dict[str, Any]) -> List[TextContent]:
+    """Handle discover_merchants tool call using vector search"""
     try:
         query = arguments.get("query", "")
-        location = arguments.get("location", {})
+        lat = arguments.get("lat")
+        lng = arguments.get("lng")
+        radius_m = arguments.get("radius_m", 50000)
         cuisine_type = arguments.get("cuisine_type")
         
-        # For now, return mock merchants
-        # In a real implementation, this would query a merchant registry
-        mock_merchants = [
-            {
-                "merchant_id": "otto_portland",
-                "name": "OTTO Portland",
-                "description": "Artisan pizza and Italian cuisine",
-                "agent_url": "http://localhost:4001",
-                "capabilities": ["order_food", "validate_offer", "process_payment"],
-                "location": {"lat": 45.5152, "lng": -122.6784},
-                "cuisine_type": "Italian",
-                "rating": 4.5,
-                "is_acp_compliant": True
-            },
-            {
-                "merchant_id": "street_exeter",
-                "name": "Street Exeter",
-                "description": "Modern British cuisine",
-                "agent_url": "http://localhost:4002",
-                "capabilities": ["order_food", "validate_offer", "process_payment"],
-                "location": {"lat": 50.7184, "lng": -3.5339},
-                "cuisine_type": "British",
-                "rating": 4.3,
-                "is_acp_compliant": True
-            },
-            {
-                "merchant_id": "newicks_lobster",
-                "name": "Newick's Lobster House",
-                "description": "Fresh seafood and lobster",
-                "agent_url": "http://localhost:4003",
-                "capabilities": ["order_food", "validate_offer", "process_payment"],
-                "location": {"lat": 43.0587, "lng": -70.7626},
-                "cuisine_type": "Seafood",
-                "rating": 4.7,
-                "is_acp_compliant": True
-            }
-        ]
+        # Use GOR to search for merchants via their offers
+        gor_client = GORClient()
         
-        # Filter by query if provided
-        if query:
-            mock_merchants = [
-                m for m in mock_merchants 
-                if query.lower() in m["name"].lower() or query.lower() in m["cuisine_type"].lower()
-            ]
-        
-        # Filter by cuisine type if provided
+        # Build search query for merchant discovery
+        search_query = query if query else "restaurant food dining"
         if cuisine_type:
-            mock_merchants = [
-                m for m in mock_merchants 
-                if cuisine_type.lower() == m["cuisine_type"].lower()
-            ]
+            search_query += f" {cuisine_type} cuisine"
         
-        if not mock_merchants:
+        # Search for offers to discover merchants
+        search_params = SearchOffersInput(
+            query=search_query,
+            lat=lat,
+            lng=lng,
+            radius_m=radius_m,
+            limit=20
+        )
+        
+        offers_response = gor_client.search_offers(search_params)
+        
+        # Handle different response formats
+        if hasattr(offers_response, 'results') and hasattr(offers_response.results, 'offers'):
+            offers = offers_response.results.offers
+        elif isinstance(offers_response, list):
+            offers = offers_response
+        else:
+            offers = []
+        
+        # Extract unique merchants from offers
+        merchants = {}
+        for offer in offers:
+            # Extract merchant info from offer data
+            merchant_id = None
+            merchant_name = None
+            cuisine_type = "General"
+            description = "Restaurant"
+            
+            # Try to get merchant info from various sources
+            if hasattr(offer, 'merchant') and offer.merchant and hasattr(offer.merchant, 'id') and offer.merchant.id:
+                merchant_id = offer.merchant.id
+                merchant_name = offer.merchant.name or merchant_id
+            elif hasattr(offer, 'content') and offer.content and hasattr(offer.content, 'restaurant_description'):
+                # Extract merchant name from restaurant description
+                desc = offer.content.restaurant_description
+                if "OTTO Portland" in desc:
+                    merchant_id = "otto_portland"
+                    merchant_name = "OTTO Portland"
+                elif "Street Exeter" in desc:
+                    merchant_id = "street_exeter"
+                    merchant_name = "Street Exeter"
+                elif "Newick's Lobster House" in desc:
+                    merchant_id = "newicks_lobster"
+                    merchant_name = "Newick's Lobster House"
+            
+            if hasattr(offer, 'content') and offer.content:
+                if hasattr(offer.content, 'cuisine_type') and offer.content.cuisine_type:
+                    cuisine_type = offer.content.cuisine_type
+                if hasattr(offer.content, 'restaurant_description') and offer.content.restaurant_description:
+                    description = offer.content.restaurant_description[:200] + "..." if len(offer.content.restaurant_description) > 200 else offer.content.restaurant_description
+            
+            if merchant_id:
+                if merchant_id not in merchants:
+                    merchants[merchant_id] = {
+                        "merchant_id": merchant_id,
+                        "name": merchant_name or merchant_id,
+                        "description": description,
+                        "location": {
+                            "lat": None,  # Would be extracted from merchant.location if available
+                            "lng": None
+                        },
+                        "cuisine_type": cuisine_type,
+                        "rating": 4.5,  # Default rating
+                        "is_acp_compliant": True,
+                        "agent_url": f"http://localhost:4001",  # Default agent URL
+                        "capabilities": ["order_food", "validate_offer", "process_payment"],
+                        "offer_count": 0
+                    }
+                
+                merchants[merchant_id]["offer_count"] += 1
+        
+        # Convert to list and sort by offer count
+        merchant_list = list(merchants.values())
+        merchant_list.sort(key=lambda x: x["offer_count"], reverse=True)
+        
+        if not merchant_list:
             return [TextContent(
                 type="text",
-                text=f"🔍 No merchants found for query: {query or 'all merchants'}"
+                text=f"🔍 No merchants found for query: {query or 'restaurants'}"
             )]
         
         # Build response text
-        response_text = f"🔍 Found {len(mock_merchants)} ACP-compliant merchants"
+        response_text = f"🔍 Found {len(merchant_list)} ACP-compliant merchants"
         if query:
             response_text += f" for '{query}'"
         if cuisine_type:
             response_text += f" with cuisine type '{cuisine_type}'"
+        if lat and lng:
+            response_text += f" within {radius_m}m of ({lat}, {lng})"
         response_text += f"\n\n"
         
-        for i, merchant in enumerate(mock_merchants, 1):
+        for i, merchant in enumerate(merchant_list, 1):
             response_text += f"{i}. **{merchant['name']}**\n"
-            response_text += f"   📝 {merchant['description']}\n"
+            response_text += f"   📝 {merchant['description'][:100]}...\n" if len(merchant['description']) > 100 else f"   📝 {merchant['description']}\n"
             response_text += f"   🏪 {merchant['cuisine_type']} cuisine\n"
             response_text += f"   ⭐ Rating: {merchant['rating']}/5\n"
             response_text += f"   🆔 {merchant['merchant_id']}\n"
+            response_text += f"   📊 {merchant['offer_count']} active offers\n"
+            if merchant['location']['lat'] and merchant['location']['lng']:
+                response_text += f"   📍 Location: ({merchant['location']['lat']}, {merchant['location']['lng']})\n"
             response_text += f"   🌐 {merchant['agent_url']}\n\n"
         
         return [TextContent(
@@ -489,6 +577,44 @@ async def handle_validate_offer(arguments: Dict[str, Any]) -> List[TextContent]:
         offer_id = arguments["offer_id"]
         items_data = arguments["items"]
         
+        # First, check if the offer exists in the GOR
+        gor_client = GORClient()
+        
+        # Try different offer ID formats
+        offer = None
+        offer_id_variants = [
+            offer_id,  # Original offer_id
+            f"{merchant_id}_{offer_id}",  # merchant_id_offer_id format
+        ]
+        
+        for variant in offer_id_variants:
+            try:
+                params = GetOfferByIdInput(offer_id=variant)
+                offer = gor_client.get_offer_by_id(params)
+                if offer:
+                    break
+            except Exception:
+                continue
+        
+        if not offer:
+            return [TextContent(
+                type="text",
+                text=f"❌ Offer {offer_id} not found in Global Offer Registry"
+            )]
+        
+        # Check if offer is still valid (not expired)
+        if offer.expires_at:
+            from datetime import datetime
+            try:
+                expires_at = datetime.fromisoformat(offer.expires_at.replace('Z', '+00:00'))
+                if datetime.now(expires_at.tzinfo) > expires_at:
+                    return [TextContent(
+                        type="text",
+                        text=f"❌ Offer {offer_id} has expired (expired: {offer.expires_at})"
+                    )]
+            except Exception:
+                pass  # Continue if date parsing fails
+        
         # Convert items to OrderItem objects
         items = [
             OrderItem(
@@ -519,6 +645,8 @@ async def handle_validate_offer(arguments: Dict[str, Any]) -> List[TextContent]:
                 if discount_amount:
                     response_text += f"**Discount Amount**: ${discount_amount}\n"
                 response_text += f"**Merchant**: {merchant_id}\n"
+                if offer.title:
+                    response_text += f"**Offer**: {offer.title}\n"
             else:
                 response_text = f"❌ Offer {offer_id} is not valid\n\n"
                 if restrictions_violated:
@@ -895,6 +1023,129 @@ def handle_nearby_offers(arguments: Dict[str, Any]) -> List[TextContent]:
         return [TextContent(
             type="text",
             text=f"❌ Nearby offers failed: {str(e)}"
+        )]
+
+
+async def handle_process_settlement(arguments: Dict[str, Any]) -> List[TextContent]:
+    """Handle process_settlement tool call"""
+    try:
+        transaction_id = arguments["transaction_id"]
+        order_id = arguments["order_id"]
+        merchant_id = arguments["merchant_id"]
+        settlement_amount = arguments["settlement_amount"]
+        revenue_split = arguments["revenue_split"]
+        
+        # Import transaction simulator client
+        import aiohttp
+        import json
+        
+        # Call transaction simulator settlement endpoint
+        async with aiohttp.ClientSession() as session:
+            settlement_data = {
+                "order_id": order_id,
+                "status": "success",
+                "amount": {
+                    "currency": "USD",
+                    "amount": settlement_amount
+                }
+            }
+            
+            async with session.post(
+                "http://localhost:3004/postbacks",
+                json=settlement_data
+            ) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    response_text = f"✅ Settlement processed successfully!\n\n"
+                    response_text += f"**Transaction ID**: {transaction_id}\n"
+                    response_text += f"**Order ID**: {order_id}\n"
+                    response_text += f"**Merchant**: {merchant_id}\n"
+                    response_text += f"**Settlement Amount**: ${settlement_amount}\n"
+                    response_text += f"**Revenue Split**:\n"
+                    
+                    for party, percentage in revenue_split.items():
+                        amount = settlement_amount * (percentage / 100)
+                        response_text += f"   - {party}: {percentage}% (${amount:.2f})\n"
+                    
+                    response_text += f"\n**Status**: {result.get('public_data', {}).get('status', 'completed')}\n"
+                    response_text += f"**Wallets Updated**: {', '.join(result.get('private_data', {}).get('wallets_updated', []))}\n"
+                    
+                    return [TextContent(
+                        type="text",
+                        text=response_text
+                    )]
+                else:
+                    error_text = await response.text()
+                    return [TextContent(
+                        type="text",
+                        text=f"❌ Settlement failed: {error_text}"
+                    )]
+        
+    except Exception as e:
+        logger.error(f"Process settlement failed: {e}")
+        return [TextContent(
+            type="text",
+            text=f"❌ Settlement processing failed: {str(e)}"
+        )]
+
+
+async def handle_process_attribution(arguments: Dict[str, Any]) -> List[TextContent]:
+    """Handle process_attribution tool call"""
+    try:
+        transaction_id = arguments["transaction_id"]
+        offer_id = arguments["offer_id"]
+        merchant_id = arguments["merchant_id"]
+        attribution_data = arguments["attribution_data"]
+        
+        # Import transaction simulator client
+        import aiohttp
+        import json
+        
+        # Call transaction simulator attribution endpoint
+        async with aiohttp.ClientSession() as session:
+            attribution_payload = {
+                "offer_id": offer_id,
+                "order_id": transaction_id,  # Use transaction_id as order_id
+                "agent_id": "mcp_client_demo",
+                "user_id": "demo_user_001",
+                "gor_operator_id": "gor_demo",
+                "bounty_amount": 2.50  # Default bounty amount for demo
+            }
+            
+            async with session.post(
+                "http://localhost:3004/receipts",
+                json=attribution_payload
+            ) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    response_text = f"✅ Attribution processed successfully!\n\n"
+                    response_text += f"**Transaction ID**: {transaction_id}\n"
+                    response_text += f"**Offer ID**: {offer_id}\n"
+                    response_text += f"**Merchant**: {merchant_id}\n"
+                    response_text += f"**Attribution Type**: Offer Usage\n"
+                    response_text += f"**Bounty Amount**: $2.50\n"
+                    
+                    response_text += f"\n**Receipt ID**: {result.get('public_data', {}).get('receipt_id', 'N/A')}\n"
+                    response_text += f"**Status**: {result.get('public_data', {}).get('status', 'created')}\n"
+                    
+                    return [TextContent(
+                        type="text",
+                        text=response_text
+                    )]
+                else:
+                    error_text = await response.text()
+                    return [TextContent(
+                        type="text",
+                        text=f"❌ Attribution failed: {error_text}"
+                    )]
+        
+    except Exception as e:
+        logger.error(f"Process attribution failed: {e}")
+        return [TextContent(
+            type="text",
+            text=f"❌ Attribution processing failed: {str(e)}"
         )]
 
 
