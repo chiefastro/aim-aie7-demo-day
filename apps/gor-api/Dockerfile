@@ -9,8 +9,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy dependency files
-COPY pyproject.toml ./
-COPY README.md ./
+COPY apps/gor-api/pyproject.toml ./
+COPY apps/gor-api/README.md ./
+
+# Copy ACP SDK
+COPY apps/acp-sdk ./acp-sdk
 
 # Install uv
 RUN pip install --no-cache-dir uv
@@ -19,7 +22,7 @@ RUN pip install --no-cache-dir uv
 RUN uv sync --verbose
 
 # Copy source code
-COPY . .
+COPY apps/gor-api .
 
 # Create non-root user
 RUN useradd --create-home --shell /bin/bash app \

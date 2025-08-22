@@ -193,17 +193,49 @@ class OfferRegistry:
         return " ".join(filter(bool, parts)).lower()
     
     async def get_offer_by_id(self, offer_id: str) -> Optional[Dict[str, Any]]:
-        """Get offer by ID"""
+        """Get offer by ID - supports both simple offer_id and full unique_id"""
+        print(f"DEBUG: Registry get_offer_by_id called with: {offer_id}")
         try:
-            # Convert string offer ID to integer hash for Qdrant
-            point_id = hash(offer_id) & 0x7fffffff  # Convert to positive 32-bit integer
+            # First try to find by unique_id (merchant_id_offer_id format)
+            if "_" in offer_id:
+                # This is already a unique_id
+                unique_id = offer_id
+                point_id = hash(unique_id) & 0x7fffffff
+                
+                result = self.qdrant.retrieve(
+                    collection_name=self.collection_name,
+                    ids=[point_id]
+                )
+                
+                if result:
+                    return result[0].payload
             
-            result = self.qdrant.retrieve(
+            # If not found or no underscore, search by offer_id in payload
+            print(f"DEBUG: About to call Qdrant scroll for offer_id: {offer_id}")
+            result = self.qdrant.scroll(
                 collection_name=self.collection_name,
-                ids=[point_id]
+                scroll_filter=Filter(
+                    must=[
+                        FieldCondition(
+                            key="offer_id",
+                            match=MatchValue(value=offer_id)
+                        )
+                    ]
+                ),
+                limit=1
             )
             
-            return result[0].payload if result else None
+            # Debug: Print to stdout since logging might not be working
+            print(f"DEBUG: Scroll result type: {type(result)}")
+            print(f"DEBUG: Scroll result for offer_id {offer_id}: {result}")
+            
+            # Handle Qdrant scroll response structure: (points, next_page_offset)
+            if result and len(result) > 0 and result[0] and len(result[0]) > 0:
+                print(f"DEBUG: Found offer payload: {result[0][0].payload}")
+                return result[0][0].payload
+            
+            print(f"DEBUG: No offer found for offer_id: {offer_id}")
+            return None
         except Exception as e:
             logger.error(f"Get offer error: {e}")
             return None

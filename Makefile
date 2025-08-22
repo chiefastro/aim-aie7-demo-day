@@ -8,8 +8,8 @@ help: ## Show this help message
 build: ## Build all Docker images
 	docker-compose build
 
-up: ## Start the core ACP demo stack (offer scraper)
-	docker-compose up -d offer-scraper
+up: ## Start the core ACP demo stack (GOR + Qdrant)
+	docker-compose up -d qdrant gor-api
 
 down: ## Stop all services
 	docker-compose down
@@ -145,10 +145,10 @@ workflow: ## Run complete demo workflow
 	@echo "3. MCP server ready for manual start: cd apps/acp-sdk && uv run python -m acp_sdk.mcp.acp_mcp"
 
 # Individual service management
-gor: ## Start only offer scraper (legacy GOR functionality now in ACP SDK)
-	docker-compose up -d offer-scraper
+gor: ## Start only GOR API and Qdrant
+	docker-compose up -d qdrant gor-api
 
-mcp: ## Start MCP server (requires offer scraper to be running)
+mcp: ## Start MCP server (requires GOR to be running)
 	@echo "🔧 Starting MCP server manually..."
 	@cd apps/acp-sdk && uv run python -m acp_sdk.mcp.acp_mcp
 
@@ -229,8 +229,8 @@ txn-simulator-acp-test: ## Test ACP Transaction Simulator setup
 	@cd apps/txn-simulator-acp && uv run python test_setup.py
 
 # Data management
-ingest: ## Trigger offer ingestion (now handled by ACP SDK)
-	@echo "📥 Offer ingestion now handled by ACP SDK discovery module"
+ingest: ## Trigger offer ingestion in GOR
+	curl -X POST http://localhost:3001/ingest
 
 scrape: ## Run restaurant data scraping
 	docker-compose run --rm offer-scraper npm run batch-scrape

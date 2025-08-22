@@ -1,6 +1,58 @@
 
 
 services:
+  # Global Offer Registry (GOR) API
+  gor-api:
+    build:
+      context: .
+      dockerfile: apps/gor-api/Dockerfile
+    container_name: acp-gor-api
+    ports:
+      - "3001:3001"
+    environment:
+      - PYTHONPATH=/app/src
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - DEMO_SERVER_URL=http://host.docker.internal:3000
+      - LOG_LEVEL=INFO
+    env_file:
+      - .env
+    volumes:
+      - ./apps/gor-api:/app
+      - ./apps/acp-sdk:/app/acp-sdk:ro
+      - /app/venv
+    working_dir: /app
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    networks:
+      - acp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  # Vector Database
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: acp-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - acp-network
+    healthcheck:
+      test: ["CMD", "bash", "-c", "timeout 5 bash -c '</dev/tcp/localhost/6333' && echo 'Port 6333 is open' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
   # Offer Scraper Demo Server (serves ACP documents)
   offer-scraper:
     build:
@@ -208,6 +260,9 @@ services:
       retries: 3
     restart: unless-stopped
     command: ["uv", "run", "python", "-m", "restaurant_agents.a2a_server", "--restaurant-id", "newicks_lobster", "--port", "4003", "--host", "0.0.0.0"]
+
+volumes:
+  qdrant_data:
 
 networks:
   acp-network:
