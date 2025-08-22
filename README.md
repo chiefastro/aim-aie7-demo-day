@@ -245,22 +245,13 @@ npm run generate
 npm run server
 ```
 
-#### 2. Start Global Offer Registry
+#### 2. Start ACP SDK (Consolidated GOR + MCP)
 
 ```bash
 # In a new terminal
-cd apps/gor-api
+cd apps/acp-sdk
 uv sync
-uv run python -m gor.main
-```
-
-#### 3. Start MCP Offers Server
-
-```bash
-# In a new terminal
-cd apps/mcp-offers
-uv sync
-uv run python -m mcp_offers
+uv run python -m acp_sdk.mcp.acp_mcp
 ```
 
 ### Configuration

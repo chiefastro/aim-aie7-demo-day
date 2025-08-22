@@ -8,8 +8,8 @@ help: ## Show this help message
 build: ## Build all Docker images
 	docker-compose build
 
-up: ## Start the core ACP demo stack (GOR + Qdrant)
-	docker-compose up -d qdrant gor-api
+up: ## Start the core ACP demo stack (offer scraper)
+	docker-compose up -d offer-scraper
 
 down: ## Stop all services
 	docker-compose down
@@ -34,15 +34,15 @@ dev: ## Start development stack with volume mounts
 
 # Testing
 test: ## Run tests for all components
-	@echo "🧪 Testing MCP Server..."
-	@cd apps/mcp-offers && if command -v python3 >/dev/null 2>&1; then \
-		python3 test_mcp_server.py; \
+	@echo "🧪 Testing ACP SDK..."
+	@cd apps/acp-sdk && if command -v python3 >/dev/null 2>&1; then \
+		python3 -m pytest; \
 	elif command -v python >/dev/null 2>&1; then \
-		python test_mcp_server.py; \
+		python -m pytest; \
 	elif command -v uv >/dev/null 2>&1; then \
-		uv run python test_mcp_server.py; \
+		uv run pytest; \
 	else \
-		echo "❌ No Python interpreter found in mcp-offers"; \
+		echo "❌ No Python interpreter found"; \
 		exit 1; \
 	fi
 
@@ -142,15 +142,15 @@ workflow: ## Run complete demo workflow
 	make start
 	@echo "2. Waiting for services to be ready..."
 	sleep 30
-	@echo "3. MCP server ready for manual start: cd apps/mcp-offers && make run"
+	@echo "3. MCP server ready for manual start: cd apps/acp-sdk && uv run python -m acp_sdk.mcp.acp_mcp"
 
 # Individual service management
-gor: ## Start only GOR API and Qdrant
-	docker-compose up -d qdrant gor-api
+gor: ## Start only offer scraper (legacy GOR functionality now in ACP SDK)
+	docker-compose up -d offer-scraper
 
-mcp: ## Start MCP server (requires GOR to be running)
+mcp: ## Start MCP server (requires offer scraper to be running)
 	@echo "🔧 Starting MCP server manually..."
-	@cd apps/mcp-offers && make run
+	@cd apps/acp-sdk && uv run python -m acp_sdk.mcp.acp_mcp
 
 # Mock Restaurant Servers (Day 4)
 restaurants: ## Start all mock restaurant servers
@@ -229,8 +229,8 @@ txn-simulator-acp-test: ## Test ACP Transaction Simulator setup
 	@cd apps/txn-simulator-acp && uv run python test_setup.py
 
 # Data management
-ingest: ## Trigger offer ingestion in GOR
-	curl -X POST http://localhost:3001/ingest
+ingest: ## Trigger offer ingestion (now handled by ACP SDK)
+	@echo "📥 Offer ingestion now handled by ACP SDK discovery module"
 
 scrape: ## Run restaurant data scraping
 	docker-compose run --rm offer-scraper npm run batch-scrape

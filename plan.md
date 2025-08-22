@@ -418,8 +418,8 @@ apps/
   acp-sdk/                # Python ACP SDK with standardized commerce skills ✅
   auto-acp-toolkit/       # Browser agent for automatic merchant discovery and ACP generation
   universal-commerce-mcp/  # Universal MCP server for all ACP-compliant merchants
-  gor-api/                # GOR ingest + search HTTP API
-  mcp-offers/             # Legacy MCP server exposing GOR (will be enhanced)
+  # gor-api/                # GOR ingest + search HTTP API (CONSOLIDATED into acp-sdk)
+  # mcp-offers/             # Legacy MCP server exposing GOR (CONSOLIDATED into acp-sdk)
   tx-simulator/           # receipts, postbacks, wallet
   restaurant-agents/      # A2A agents using ACP SDK (enhanced)
 

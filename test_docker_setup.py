@@ -14,8 +14,6 @@ class DockerSetupTester:
     
     def __init__(self):
         self.services = {
-            "qdrant": {"url": "http://localhost:6333/health", "port": 6333},
-            "gor-api": {"url": "http://localhost:3001/health", "port": 3001},
             "offer-scraper": {"url": "http://localhost:3000/demo", "port": 3000}
         }
         self.results = {}
