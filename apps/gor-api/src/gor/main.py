@@ -5,9 +5,11 @@ import uvicorn
 from datetime import datetime
 import logging
 
-from gor.services.gor_service import GORService
-from gor.services.search_service import SearchService
-from gor.models.offer_models import SearchParams, SearchResponse, OfferResponse
+from acp_sdk.discovery.registry import OfferRegistry
+from acp_sdk.models.offers import (
+    SearchParams, SearchResults, SearchResponse, OfferResponse, Offer,
+    SearchOffersInput, GetOfferByIdInput, NearbyOffersInput
+)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -29,8 +31,7 @@ app.add_middleware(
 )
 
 # Initialize services
-gor_service = GORService()
-search_service = SearchService(gor_service)
+gor_service = OfferRegistry()
 
 @app.on_event("startup")
 async def startup_event():
@@ -69,6 +70,7 @@ async def search_offers(
         if labels:
             label_list = [label.strip() for label in labels.split(",") if label.strip()]
         
+        # Create SearchParams
         search_params = SearchParams(
             query=query.strip(),
             lat=lat,
@@ -79,14 +81,54 @@ async def search_offers(
             offset=offset
         )
         
-        results = await search_service.search_offers(search_params)
+        # Get raw results from registry
+        raw_results = await gor_service.search_offers(query.strip(), {
+            "lat": lat,
+            "lng": lng,
+            "radius_m": radius_m,
+            "labels": label_list,
+            "limit": limit,
+            "offset": offset
+        })
         
+        # Convert raw results to Offer models
+        offers = []
+        for raw_offer in raw_results:
+            try:
+                # Convert raw offer data to Offer model
+                offer = Offer(
+                    offer_id=raw_offer.get("offer_id"),
+                    title=raw_offer.get("title"),
+                    description=raw_offer.get("description"),
+                    content=raw_offer.get("content"),
+                    terms=raw_offer.get("terms"),
+                    bounty=raw_offer.get("bounty"),
+                    merchant=raw_offer.get("merchant"),
+                    labels=raw_offer.get("labels", []),
+                    created_at=raw_offer.get("created_at"),
+                    updated_at=raw_offer.get("updated_at"),
+                    expires_at=raw_offer.get("expires_at")
+                )
+                offers.append(offer)
+            except Exception as e:
+                logger.warning(f"Failed to parse offer {raw_offer.get('offer_id')}: {e}")
+                continue
+        
+        # Create SearchResults
+        search_results = SearchResults(
+            offers=offers,
+            total=len(offers),
+            limit=limit,
+            offset=offset
+        )
+        
+        # Return proper SearchResponse
         return SearchResponse(
             success=True,
             query=search_params,
-            results=results,
+            results=search_results,
             metadata={
-                "search_time_ms": results.get("search_time", 0),
+                "search_time_ms": 0,
                 "ranking_method": "hybrid_semantic_geo_time"
             }
         )
@@ -97,10 +139,30 @@ async def search_offers(
 async def get_offer(offer_id: str):
     """Get offer by ID"""
     try:
-        offer = await gor_service.get_offer_by_id(offer_id)
+        print(f"DEBUG: GOR API called with offer_id: {offer_id}")
+        print(f"DEBUG: gor_service type: {type(gor_service)}")
         
-        if not offer:
+        raw_offer = await gor_service.get_offer_by_id(offer_id)
+        
+        print(f"DEBUG: raw_offer result: {raw_offer}")
+        
+        if not raw_offer:
             raise HTTPException(status_code=404, detail="Offer not found")
+        
+        # Convert raw offer data to Offer model
+        offer = Offer(
+            offer_id=raw_offer.get("offer_id"),
+            title=raw_offer.get("title"),
+            description=raw_offer.get("description"),
+            content=raw_offer.get("content"),
+            terms=raw_offer.get("terms"),
+            bounty=raw_offer.get("bounty"),
+            merchant=raw_offer.get("merchant"),
+            labels=raw_offer.get("labels", []),
+            created_at=raw_offer.get("created_at"),
+            updated_at=raw_offer.get("updated_at"),
+            expires_at=raw_offer.get("expires_at")
+        )
         
         return OfferResponse(
             success=True,

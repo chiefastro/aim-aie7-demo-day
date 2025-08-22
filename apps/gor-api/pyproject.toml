@@ -30,6 +30,8 @@ dependencies = [
     "numpy>=1.24.3",
     "python-multipart>=0.0.6",
     "aiohttp>=3.8.0",
+    # ACP SDK dependency
+    "acp-sdk @ file:///app/acp-sdk",
 ]
 
 [project.optional-dependencies]
@@ -61,6 +63,9 @@ target-version = ['py311', 'py312', 'py313']
 [tool.isort]
 profile = "black"
 multi_line_output = 3
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.mypy]
 python_version = "3.11"

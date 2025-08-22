@@ -1,14 +1,32 @@
 """
-ACP SDK - Standardized commerce capabilities for A2A agents.
+ACP SDK - Standardized commerce capabilities for ACP protocol.
 
-This package provides a complete framework for creating A2A agents with
-standardized commerce capabilities while maintaining compliance with the ACP protocol.
+This package provides a complete framework for creating ACP-compliant services
+with standardized commerce capabilities while maintaining compliance with the ACP protocol.
 """
 
-from .core import ACPAgent
-from .models import (
+# Transaction processing module
+from .txns import WalletManager, PrivacyManager, create_txn_simulator_app
+
+# Discovery module
+from .discovery import GORClient, OfferRegistry, VectorSearchService, OSFIngestionService
+
+# MCP module
+from .mcp import mcp, main as mcp_main, ACPClient
+
+# A2A module - Core functionality for restaurant agents
+from .a2a import (
+    # Core classes
+    ACPAgent,
+    ACPBaseExecutor,
+    ACPServer,
+    create_acp_server,
+    
+    # Configuration and models
     ACPConfig,
     AgentCapability,
+    
+    # Task models
     CommerceTask,
     CommerceResult,
     OrderTask,
@@ -21,17 +39,21 @@ from .models import (
     OfferValidationResult,
     InventoryResult,
     CustomerServiceResult,
+    
+    # Data models
     OrderItem,
     OrderSummary,
     OfferDetails,
     PaymentRequest,
     PaymentDetails,
+    
+    # Enums
     TaskType,
     OrderStatus,
     PaymentStatus,
     PaymentMethod,
-)
-from .skills import (
+    
+    # Skills
     BaseCommerceSkill,
     OrderManagementSkill,
     PaymentProcessingSkill,
@@ -42,10 +64,8 @@ from .skills import (
     LLMEnhancedSkill,
     LLMEnhancedOrderSkill,
     LLMEnhancedPaymentSkill,
-)
-from .executor import ACPBaseExecutor
-from .server import ACPServer, create_acp_server
-from .exceptions import (
+    
+    # Exceptions
     ACPError,
     ConfigurationError,
     SkillExecutionError,
@@ -53,32 +73,42 @@ from .exceptions import (
     HITLRequiredError,
 )
 
-# Agent framework integrations
-from .agent_frameworks import (
-    AgentFrameworkAdapter,
-    LangGraphACPAdapter,
-    LlamaIndexACPAdapter,
-    AutoGenACPAdapter,
-    ACPAgentFrameworkExecutor,
-    create_langgraph_acp_agent,
-    create_llamaindex_acp_agent,
-    create_autogen_acp_agent,
-)
+# Models
+from .models.offers import Offer, SearchOffersInput, GetOfferByIdInput, NearbyOffersInput
+from .models.receipts import CreateReceiptRequest, CreateReceiptResponse, AttributionReceipt
+from .models.postbacks import ProcessPostbackRequest, ProcessPostbackResponse, SettlementPostback
+from .models.wallets import WalletResponse, ProtocolStats
 
 __version__ = "1.0.0"
 
 __all__ = [
-    # Core classes
+    # Transaction processing
+    "WalletManager",
+    "PrivacyManager",
+    "create_txn_simulator_app",
+    
+    # Discovery
+    "GORClient",
+    "OfferRegistry", 
+    "VectorSearchService",
+    "OSFIngestionService",
+    
+    # MCP
+    "mcp",
+    "mcp_main",
+    "ACPClient",
+    
+    # A2A Core classes
     "ACPAgent",
     "ACPBaseExecutor",
     "ACPServer",
     "create_acp_server",
     
-    # Configuration and models
+    # A2A Configuration and models
     "ACPConfig",
     "AgentCapability",
     
-    # Task models
+    # A2A Task models
     "CommerceTask",
     "CommerceResult",
     "OrderTask",
@@ -92,20 +122,20 @@ __all__ = [
     "InventoryResult",
     "CustomerServiceResult",
     
-    # Data models
+    # A2A Data models
     "OrderItem",
     "OrderSummary",
     "OfferDetails",
     "PaymentRequest",
     "PaymentDetails",
     
-    # Enums
+    # A2A Enums
     "TaskType",
     "OrderStatus",
     "PaymentStatus",
     "PaymentMethod",
     
-    # Skills
+    # A2A Skills
     "BaseCommerceSkill",
     "OrderManagementSkill",
     "PaymentProcessingSkill",
@@ -117,20 +147,24 @@ __all__ = [
     "LLMEnhancedOrderSkill",
     "LLMEnhancedPaymentSkill",
     
-    # Exceptions
+    # A2A Exceptions
     "ACPError",
     "ConfigurationError",
     "SkillExecutionError",
     "ValidationError",
     "HITLRequiredError",
     
-    # Agent Framework Integrations
-    "AgentFrameworkAdapter",
-    "LangGraphACPAdapter",
-    "LlamaIndexACPAdapter",
-    "AutoGenACPAdapter",
-    "ACPAgentFrameworkExecutor",
-    "create_langgraph_acp_agent",
-    "create_llamaindex_acp_agent",
-    "create_autogen_acp_agent",
+    # Models
+    "Offer",
+    "SearchOffersInput",
+    "GetOfferByIdInput", 
+    "NearbyOffersInput",
+    "CreateReceiptRequest",
+    "CreateReceiptResponse",
+    "AttributionReceipt",
+    "ProcessPostbackRequest",
+    "ProcessPostbackResponse",
+    "SettlementPostback",
+    "WalletResponse",
+    "ProtocolStats",
 ]

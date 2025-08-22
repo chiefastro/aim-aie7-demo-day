@@ -17,20 +17,26 @@ WORKDIR /app
 # Copy pyproject.toml
 COPY apps/restaurant-agents/pyproject.toml ./
 
-# Copy ACP SDK first
+# Copy ACP SDK
 COPY apps/acp-sdk/ ./acp-sdk/
 
 # Install dependencies (create lock file if it doesn't exist)
 RUN uv sync
 
+# Install ACP SDK in development mode
+RUN cd acp-sdk && uv pip install -e .
+
 # Copy restaurant agents code
 COPY apps/restaurant-agents/restaurant_agents/ ./restaurant_agents/
 
-# Copy environment file
-COPY apps/restaurant-agents/.env ./
+# Copy test files
+COPY apps/restaurant-agents/test_*.py ./
+
+# Copy environment file (if it exists)
+COPY apps/restaurant-agents/.env* ./
 
 # Expose ports
 EXPOSE 4001 4002 4003
 
 # Default command (will be overridden by docker-compose)
-CMD ["uv", "run", "python", "-m", "restaurant_agents.otto_portland"]
+CMD ["uv", "run", "python", "-m", "restaurant_agents.a2a_server", "--restaurant-id", "otto_portland", "--port", "4001"]
