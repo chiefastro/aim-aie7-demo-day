@@ -9,7 +9,7 @@ import asyncio
 from typing import Any, Dict, List, Optional, Type
 from abc import ABC, abstractmethod
 
-from .models import ACPConfig, CommerceTask, CommerceResult
+from ..models.a2a_connector import ACPConfig, CommerceTask, CommerceResult
 from .core import ACPAgent
 from .skills import BaseCommerceSkill
 

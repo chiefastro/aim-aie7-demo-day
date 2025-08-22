@@ -30,7 +30,7 @@ from a2a.utils import (
 )
 from a2a.utils.errors import ServerError
 
-from .models import ACPConfig, AgentCapability, TaskType, CommerceTask, CommerceResult
+from ..models.a2a_connector import ACPConfig, AgentCapability, TaskType, CommerceTask, CommerceResult
 from .core import ACPAgent
 from .exceptions import ACPError, SkillExecutionError
 
@@ -354,7 +354,7 @@ class ACPBaseExecutor(AgentExecutor):
 
     def _create_order_task(self, items: List[Dict[str, Any]]) -> CommerceTask:
         """Create an order task from items."""
-        from .models import OrderTask, OrderItem
+        from ..models.a2a_connector import OrderTask, OrderItem
         
         order_items = []
         for item in items:
@@ -373,7 +373,7 @@ class ACPBaseExecutor(AgentExecutor):
 
     def _create_offer_task(self, offer_id: str, items: List[Dict[str, Any]]) -> CommerceTask:
         """Create an offer validation task."""
-        from .models import OfferTask, OrderItem
+        from ..models.a2a_connector import OfferTask, OrderItem
         
         order_items = []
         for item in items:
@@ -392,7 +392,7 @@ class ACPBaseExecutor(AgentExecutor):
 
     def _create_inventory_task(self) -> CommerceTask:
         """Create an inventory query task."""
-        from .models import InventoryTask
+        from ..models.a2a_connector import InventoryTask
         
         return InventoryTask(
             task_id=f"task_{datetime.now().timestamp()}",

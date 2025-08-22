@@ -14,7 +14,7 @@ from datetime import datetime
 from a2a.types import AgentSkill
 
 from .exceptions import ACPError, HITLRequiredError, SkillExecutionError, ValidationError
-from .models import (
+from ..models.a2a_connector import (
     CommerceResult,
     CommerceTask,
     CustomerServiceResult,

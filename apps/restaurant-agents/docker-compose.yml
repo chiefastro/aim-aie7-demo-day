@@ -3,8 +3,8 @@ version: '3.8'
 services:
   restaurant-agent-otto:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: apps/restaurant-agents/Dockerfile
     container_name: restaurant-agent-otto
     ports:
       - "4001:4001"
@@ -22,12 +22,12 @@ services:
       timeout: 10s
       retries: 3
     restart: unless-stopped
-    command: ["uv", "run", "python", "-m", "restaurant_agents.otto_portland"]
+    command: ["uv", "run", "python", "-m", "restaurant_agents.a2a_server", "--restaurant-id", "otto_portland", "--port", "4001"]
 
   restaurant-agent-street:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: apps/restaurant-agents/Dockerfile
     container_name: restaurant-agent-street
     ports:
       - "4002:4002"
@@ -45,12 +45,12 @@ services:
       timeout: 10s
       retries: 3
     restart: unless-stopped
-    command: ["uv", "run", "python", "-m", "restaurant_agents.street_exeter"]
+    command: ["uv", "run", "python", "-m", "restaurant_agents.a2a_server", "--restaurant-id", "street_exeter", "--port", "4002"]
 
   restaurant-agent-newicks:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: apps/restaurant-agents/Dockerfile
     container_name: restaurant-agent-newicks
     ports:
       - "4003:4003"
@@ -68,7 +68,7 @@ services:
       timeout: 10s
       retries: 3
     restart: unless-stopped
-    command: ["uv", "run", "python", "-m", "restaurant_agents.newicks_lobster"]
+    command: ["uv", "run", "python", "-m", "restaurant_agents.a2a_server", "--restaurant-id", "newicks_lobster", "--port", "4003"]
 
 networks:
   restaurant-agent-network:

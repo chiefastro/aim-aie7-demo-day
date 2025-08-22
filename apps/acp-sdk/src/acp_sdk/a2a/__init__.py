@@ -6,7 +6,7 @@ standardized commerce capabilities while maintaining compliance with the ACP pro
 """
 
 from .core import ACPAgent
-from .models import (
+from ..models.a2a_connector import (
     ACPConfig,
     AgentCapability,
     CommerceTask,
@@ -54,29 +54,23 @@ from .exceptions import (
 )
 
 # Protocol standards
-from .protocol import (
-    OSFFeed, OSFOffer,
-    Offer, OfferContent, OfferTerms, OfferBounty, Merchant, MerchantLocation,
-    AttributionReceipt, PublicReceiptData, PrivateReceiptData,
-    SettlementPostback, PublicSettlementData, PrivateSettlementData,
-    UserWallet, AgentWallet, GORWallet, MerchantWallet,
-    PublicWalletData, PrivateWalletData,
-    MerchantWalletPublicData, MerchantWalletPrivateData,
-)
+from ..models.osf import OSFFeed, OSFOffer
+from ..models.offers import Offer, OfferContent, OfferTerms, OfferBounty, Merchant, MerchantLocation
+from ..models.receipts import AttributionReceipt, PublicReceiptData, PrivateReceiptData
+from ..models.postbacks import SettlementPostback, PublicSettlementData, PrivateSettlementData
+from ..models.wallets import UserWallet, AgentWallet, GORWallet, MerchantWallet, PublicWalletData, PrivateWalletData, MerchantWalletPublicData, MerchantWalletPrivateData
 
 # Discovery and indexing
-from .discovery import (
+from ..discovery import (
     OfferRegistry,
     VectorSearchService,
     OSFIngestionService,
 )
 
 # MCP tools and server
-from .mcp import (
-    ACPServer as ACPMCPServer,
-    create_acp_server,
-    MCPTools,
-)
+from ..mcp.acp_mcp import mcp as ACPMCPServer
+from .server import create_acp_server
+MCPTools = None  # Not implemented yet
 
 # Agent framework integrations
 from .agent_frameworks import (

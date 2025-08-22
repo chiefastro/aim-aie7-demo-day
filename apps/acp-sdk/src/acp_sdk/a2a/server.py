@@ -28,7 +28,7 @@ from a2a.types import (
     AgentSkill,
 )
 
-from .models import ACPConfig, AgentCapability
+from ..models.a2a_connector import ACPConfig, AgentCapability
 from .executor import ACPBaseExecutor
 from .core import ACPAgent
 

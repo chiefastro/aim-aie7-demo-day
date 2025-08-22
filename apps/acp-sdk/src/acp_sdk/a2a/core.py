@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Optional, Union
 from a2a.types import AgentCard, AgentCapabilities, AgentSkill
 
 from .exceptions import ACPError, ConfigurationError, SkillExecutionError
-from .models import CommerceResult, CommerceTask
+from ..models.a2a_connector import CommerceResult, CommerceTask
 from .skills import CommerceSkills, BaseCommerceSkill
 
 logger = logging.getLogger(__name__)
