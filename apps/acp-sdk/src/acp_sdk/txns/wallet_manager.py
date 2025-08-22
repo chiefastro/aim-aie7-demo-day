@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Dict, List, Optional
 from uuid import uuid4
 
-from acp_sdk.models.wallets import (
+from ..models.wallets import (
     AgentWallet,
     GORWallet,
     MerchantWallet,
@@ -13,13 +13,13 @@ from acp_sdk.models.wallets import (
     PrivateWalletData,
     UserWallet,
 )
-from acp_sdk.models.receipts import (
+from ..models.receipts import (
     AttributionReceipt,
     CreateReceiptRequest,
     PublicReceiptData,
     PrivateReceiptData,
 )
-from acp_sdk.models.postbacks import (
+from ..models.postbacks import (
     ProcessPostbackRequest,
     PublicSettlementData,
     PrivateSettlementData,
@@ -120,7 +120,7 @@ class WalletManager:
     
     def _create_merchant_wallet(self, merchant_id: str, initial_funding: float):
         """Create a new merchant wallet with initial funding."""
-        from acp_sdk.models.wallets import MerchantWalletPublicData, MerchantWalletPrivateData
+        from ..models.wallets import MerchantWalletPublicData, MerchantWalletPrivateData
         
         public_data = MerchantWalletPublicData(
             merchant_id=merchant_id,

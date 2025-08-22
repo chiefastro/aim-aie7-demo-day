@@ -115,6 +115,7 @@ health: ## Check health of all services
 	@echo "Qdrant: $(shell curl -s http://localhost:6333/health | jq -r '.status' 2>/dev/null || echo 'unavailable')"
 	@echo "GOR API: $(shell curl -s http://localhost:3001/health | jq -r '.status' 2>/dev/null || echo 'unavailable')"
 	@echo "Transaction Simulator: $(shell curl -s http://localhost:3003/health | jq -r '.status' 2>/dev/null || echo 'unavailable')"
+	@echo "ACP Transaction Simulator: $(shell curl -s http://localhost:3004/health | jq -r '.status' 2>/dev/null || echo 'unavailable')"
 	@echo "OTTO Portland: $(shell curl -s http://localhost:8001/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
 	@echo "Street Exeter: $(shell curl -s http://localhost:8002/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
 	@echo "Newick's Lobster: $(shell curl -s http://localhost:8003/health 2>/dev/null | jq -r '.status' 2>/dev/null || echo 'unavailable')"
@@ -131,6 +132,7 @@ start: ## Quick start - build and run core stack
 	@echo "📊 GOR API: http://localhost:3001"
 	@echo "🗄️  Qdrant: http://localhost:6333"
 	@echo "💰 Transaction Simulator: http://localhost:3003"
+	@echo "💰 ACP Transaction Simulator: http://localhost:3004"
 	@echo "🍕 Mock Restaurants: http://localhost:8001-8003 (run: make restaurants)"
 
 # Demo workflow
@@ -201,6 +203,30 @@ tx-simulator-logs: ## Show logs for Transaction Simulator
 tx-simulator-local: ## Start Transaction Simulator locally (requires uv)
 	@echo "💰 Starting Transaction Simulator locally..."
 	@cd apps/tx-simulator && uv run python -m src.tx_simulator.main
+
+# ACP Transaction Simulator (Day 5)
+txn-simulator-acp: ## Start ACP Transaction Simulator
+	docker-compose up -d txn-simulator-acp
+
+txn-simulator-acp-stop: ## Stop ACP Transaction Simulator
+	docker-compose stop txn-simulator-acp
+
+txn-simulator-acp-build: ## Build ACP Transaction Simulator Docker image
+	docker-compose build txn-simulator-acp
+
+txn-simulator-acp-restart: ## Restart ACP Transaction Simulator
+	docker-compose restart txn-simulator-acp
+
+txn-simulator-acp-logs: ## Show logs for ACP Transaction Simulator
+	docker-compose logs -f txn-simulator-acp
+
+txn-simulator-acp-local: ## Start ACP Transaction Simulator locally (requires uv)
+	@echo "💰 Starting ACP Transaction Simulator locally..."
+	@cd apps/txn-simulator-acp && uv run python -m src.txn_simulator_acp.main
+
+txn-simulator-acp-test: ## Test ACP Transaction Simulator setup
+	@echo "🧪 Testing ACP Transaction Simulator setup..."
+	@cd apps/txn-simulator-acp && uv run python test_setup.py
 
 # Data management
 ingest: ## Trigger offer ingestion in GOR

@@ -13,9 +13,9 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(name)s:%(message)s')
 
 # Add the acp-mcp src directory to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'apps', 'acp-mcp', 'src'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'apps', 'acp-sdk', 'src'))
 
-from acp_mcp.client import ACPClient
+from acp_sdk.mcp.a2a_client import ACPClient
 
 async def debug_a2a_client():
     """Debug A2A client communication with restaurant agents."""
@@ -71,7 +71,7 @@ async def debug_a2a_client():
         print("-" * 50)
         
         # Test order placement
-        from acp_mcp.models import OrderRequest, OrderItem
+        from acp_sdk.mcp.models import OrderRequest, OrderItem
         
         order_items = [
             OrderItem(name="Margherita Pizza", quantity=1, price=16.5)

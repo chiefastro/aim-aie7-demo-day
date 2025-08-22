@@ -7,11 +7,11 @@ import asyncio
 import sys
 import os
 
-# Add the acp-mcp src directory to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'apps', 'acp-mcp', 'src'))
+# Add the acp-sdk src directory to the path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'apps', 'acp-sdk', 'src'))
 
-from acp_mcp.client import ACPClient
-from acp_mcp.models import OrderRequest, OrderItem
+from acp_sdk.mcp.a2a_client import ACPClient
+from acp_sdk.mcp.models import OrderRequest, OrderItem
 
 async def test_acp_client():
     """Test ACP client connection to real A2A servers."""

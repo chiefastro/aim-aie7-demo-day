@@ -3,11 +3,15 @@
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 
-from .models import (
+from acp_sdk.models.receipts import (
     CreateReceiptRequest,
     CreateReceiptResponse,
+)
+from acp_sdk.models.postbacks import (
     ProcessPostbackRequest,
     ProcessPostbackResponse,
+)
+from acp_sdk.models.wallets import (
     ProtocolStats,
     WalletResponse,
 )
