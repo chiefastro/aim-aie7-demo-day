@@ -69,43 +69,14 @@ services:
     profiles:
       - setup
 
-
-
-
-
-
-
-
-
-  # Transaction Simulator (Day 5)
-  tx-simulator:
-    build:
-      context: ./apps/tx-simulator
-      dockerfile: Dockerfile
-    container_name: acp-tx-simulator
-    ports:
-      - "3003:3003"
-    environment:
-      - PORT=3003
-      - PYTHONPATH=/app/src
-    networks:
-      - acp-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3003/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    restart: unless-stopped
-
-  # ACP Transaction Simulator (Day 5)
+  # ACP Transaction Simulator
   txn-simulator-acp:
     build:
       context: .
       dockerfile: apps/txn-simulator-acp/Dockerfile
     container_name: acp-txn-simulator-acp
     ports:
-      - "3004:3003"
+      - "3003:3003"
     environment:
       - PORT=3003
       - PYTHONPATH=/app
@@ -121,7 +92,7 @@ services:
     restart: unless-stopped
     command: ["uv", "run", "uvicorn", "src.txn_simulator_acp.main:app", "--host", "0.0.0.0", "--port", "3003"]
 
-  # Mock Restaurant Web Servers (Day 4)
+  # Mock Restaurant Web Servers
   otto-portland:
     build:
       context: ./apps/mock-restaurants
@@ -185,7 +156,7 @@ services:
       retries: 3
     restart: unless-stopped
 
-  # Restaurant Agents (Day 4)
+  # Restaurant Agents
   restaurant-agent-otto:
     build:
       context: .
