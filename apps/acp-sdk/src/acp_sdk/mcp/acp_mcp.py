@@ -1051,7 +1051,7 @@ async def handle_process_settlement(arguments: Dict[str, Any]) -> List[TextConte
             }
             
             async with session.post(
-                "http://localhost:3004/postbacks",
+                "http://localhost:3003/postbacks",
                 json=settlement_data
             ) as response:
                 if response.status == 200:
@@ -1114,7 +1114,7 @@ async def handle_process_attribution(arguments: Dict[str, Any]) -> List[TextCont
             }
             
             async with session.post(
-                "http://localhost:3004/receipts",
+                "http://localhost:3003/receipts",
                 json=attribution_payload
             ) as response:
                 if response.status == 200:

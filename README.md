@@ -281,6 +281,7 @@ validate_offer(
 - 🔄 **Auto-ACP Toolkit**: Browser agent for automatic merchant discovery and ACP integration code generation (see [plan.md](plan.md) for details)
 - 🔄 **Publish ACP MCP Server**: Package ACP MCP server as an npm package for easy installation in Cursor, Claude, and other MCP-compatible chat clients.
 - 🔄 **Publish acp-sdk on PyPi**: Package acp-sdk on PyPi for Python developers to easily build ACP-compliant apps.
+- 🔄 **Real Agents and MCP Abstraction**: Simplify MCP tool list and have real A2A agents that can handle complex requests.
 
 
 ## Run the Complete Demo
@@ -291,11 +292,13 @@ git clone https://github.com/chiefastro/aim-aie7-demo-day.git
 cd aim-aie7-demo-day
 
 # Start the complete ACP ecosystem
-make start
+make reset
 
 # View demo endpoints
 open http://localhost:3000/demo
 ```
+
+You can run just `make start` after the initial setup.
 
 ### Available Demo Endpoints
 
@@ -304,26 +307,46 @@ open http://localhost:3000/demo
 - **OSF Examples**: http://localhost:3000/osf/{merchant}/.well-known/osf.json
 - **Offer Examples**: http://localhost:3000/osf/{merchant}/.well-known/offers/{offer_id}.json
 
-### Test ACP MCP Tools
+### Set Up ACP MCP Server in Cursor
 
-```bash
-# Start ACP MCP server
-cd apps/acp-sdk
-uv run python -m acp_sdk.mcp.acp_mcp
+To use ACP MCP tools in Cursor:
 
-# The MCP server provides 7 tools:
-# - discover_merchants: Find ACP-compliant merchants
-# - offers_search: Semantic search for offers
-# - offers_nearby: Find offers by location
-# - offers_get_by_id: Get specific offer details
-# - validate_offer: Validate offers and discounts
-# - order_food: Place food orders
-# - process_payment: Process payments
-# - get_menu: Get merchant menus
-# - track_order: Track order status
-# - process_settlement: Process settlements
-# - process_attribution: Process attributions
+1. **Open MCP Settings**: Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux), then type "View: Open MCP Settings"
+
+2. **Add New MCP Server**: Click "Add New MCP Server" and add this configuration (be sure to change {your-dir} to the directory you cloned the repo into):
+
+```json
+{
+  "acp-mcp": {
+    "command": "uv",
+    "args": [
+      "--directory", 
+      "{your-dir}/aim-aie7-demo-day/apps/acp-sdk", 
+      "run", 
+      "python", 
+      "-m", 
+      "acp_sdk.mcp.acp_mcp",
+      "--a2a-server-url", 
+      "http://localhost:4001"
+    ]
+  }
+}
 ```
+
+Toggle the new MCP server on. The ACP MCP server will now be available with 11 commerce tools:
+   - `discover_merchants`: Find ACP-compliant merchants
+   - `offers_search`: Semantic search for offers
+   - `offers_nearby`: Find offers by location
+   - `offers_get_by_id`: Get specific offer details
+   - `validate_offer`: Validate offers and discounts
+   - `order_food`: Place food orders
+   - `process_payment`: Process payments
+   - `get_menu`: Get merchant menus
+   - `track_order`: Track order status
+   - `process_settlement`: Process settlements
+   - `process_attribution`: Process attributions
+
+**Note**: Make sure you have the ACP demo running locally first. The MCP server connects to local A2A servers and the Global Offer Registry.
 
 ## 🔒 Privacy & Security
 
